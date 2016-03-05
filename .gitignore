@@ -1,3 +1,6 @@
 # ignore these directories
 .settings/
 bin/
+
+# ignore these files
+*.tok
