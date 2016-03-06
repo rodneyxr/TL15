@@ -1,5 +1,14 @@
 #!/bin/sh
 
-cd ..
-mkdir -p bin
-javac -cp . -d bin src/core/*
+ROOT=..
+SOURCES=$ROOT/src/core/*
+BIN=bin
+
+echo "Cleaning..."
+rm -rf $BIN
+mkdir -p $BIN
+
+echo "Compiling..."
+javac -cp . -d $BIN $SOURCES
+
+echo "Done."
