@@ -90,7 +90,7 @@ public class Lexer {
 
 			// invalid token; lexer error
 			if (token == null) {
-				System.err.println("Lexer Error: Invalid token -> " + lexeme);
+				System.err.println("SCANNER ERROR: Invalid token -> " + lexeme);
 				System.exit(1);
 			}
 		}
@@ -162,10 +162,10 @@ public class Lexer {
 			try {
 			Integer.valueOf(lexeme);
 			} catch (NumberFormatException e) {
-				System.err.println("Lexer Error: Number too large -> " + lexeme);
+				System.err.println("SCANNER ERROR: Number too large -> " + lexeme);
 				System.exit(1);
 			}
-			token = new Token(TokenType.NUMBER, lexeme);
+			token = new Token(TokenType.num, lexeme);
 		}
 		return token;
 	}
@@ -177,7 +177,7 @@ public class Lexer {
 	private Token getLiteral() {
 		Token token = null;
 		if (lexeme.matches("true|false")) {
-			token = new Token(TokenType.LITERAL, lexeme);
+			token = new Token(TokenType.boollit, lexeme);
 		}
 		return token;
 	}
@@ -191,7 +191,7 @@ public class Lexer {
 	private Token getIdentifier() {
 		Token token = null;
 		if (lexeme.matches("[A-Z][A-Z0-9]*")) {
-			token = new Token(TokenType.IDENTIFIER, lexeme);
+			token = new Token(TokenType.ident, lexeme);
 		}
 		return token;
 	}
