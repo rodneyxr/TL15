@@ -1,4 +1,4 @@
-package core;
+package core.lexer;
 
 public class Token {
 

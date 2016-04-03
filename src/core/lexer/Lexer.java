@@ -1,4 +1,4 @@
-package core;
+package core.lexer;
 
 import java.util.HashMap;
 import java.util.Scanner;

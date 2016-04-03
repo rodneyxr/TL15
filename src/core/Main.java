@@ -2,9 +2,10 @@ package core;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Scanner;
+
+import core.lexer.Lexer;
+import core.lexer.TokenStream;
 
 public class Main {
 
@@ -34,29 +35,9 @@ public class Main {
 
 		// create the lexer
 		Lexer lexer = new Lexer(scanner);
+		TokenStream stream = new TokenStream(lexer);
+		System.out.println(stream);
 
-		String tokFilename = sourceFile.getAbsolutePath().replaceAll("\\.tl$", ".tok");
-		File tokFile = new File(tokFilename);
-
-		// write the token stream to a file
-		try {
-			writeTokenStreamToFile(tokFile, lexer);
-		} catch (IOException e) {
-			System.err.println("Error writing to file: " + tokFile.getAbsolutePath());
-			System.exit(1);
-		}
-		System.out.println("File created: " + tokFile.getAbsolutePath());
-
-	}
-
-	private static void writeTokenStreamToFile(File file, Lexer lexer) throws FileNotFoundException {
-		PrintWriter w = new PrintWriter(file);
-		Token token = lexer.getToken();
-		while (token != null) {
-			w.println(token.toString());
-			token = lexer.getToken();
-		}
-		w.close();
 	}
 
 }
