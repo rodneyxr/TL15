@@ -36,12 +36,21 @@ public class TokenStream {
 	}
 
 	/**
+	 * Gets the current token in the stream.
+	 * 
+	 * @return the current token in the stream.
+	 */
+	public Token token() {
+		return get(position);
+	}
+
+	/**
 	 * Gets the next token in the stream.
 	 * 
 	 * @return The next token in the stream. Null if end of stream.
 	 */
 	public Token next() {
-		return get(position + 1);
+		return get(++position);
 	}
 
 	/**
@@ -50,9 +59,9 @@ public class TokenStream {
 	 * @return The previous token in the stream. Null if at beginning of stream.
 	 */
 	public Token previous() {
-		return get(position - 1);
+		return get(--position);
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

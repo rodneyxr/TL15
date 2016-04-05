@@ -14,6 +14,14 @@ public class Token {
 		this.text = text;
 	}
 
+	public boolean isType(TokenType type) {
+		return type == this.type;
+	}
+
+	public TokenType getType() {
+		return type;
+	}
+
 	public String toString() {
 		if (text != null) {
 			return String.format("%s(%s)", type.toString(), text);

@@ -6,6 +6,8 @@ import java.util.Scanner;
 
 import core.lexer.Lexer;
 import core.lexer.TokenStream;
+import core.parser.Parser;
+import core.parser.TreeNode;
 
 public class Main {
 
@@ -36,7 +38,10 @@ public class Main {
 		// create the lexer
 		Lexer lexer = new Lexer(scanner);
 		TokenStream stream = new TokenStream(lexer);
-		System.out.println(stream);
+		Parser parser = new Parser(stream);
+		
+		parser.program(new TreeNode(null, null));
+//		System.out.println(stream);
 
 	}
 
