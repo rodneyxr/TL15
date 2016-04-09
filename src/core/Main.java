@@ -39,9 +39,10 @@ public class Main {
 		Lexer lexer = new Lexer(scanner);
 		TokenStream stream = new TokenStream(lexer);
 		Parser parser = new Parser(stream);
-		
+
 		parser.program(new TreeNode(null, null));
-//		System.out.println(stream);
+		System.out.println("Compiled Successfully!");
+		// System.out.println(stream);
 
 	}
 
