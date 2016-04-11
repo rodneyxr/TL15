@@ -5,7 +5,7 @@ import java.util.List;
 
 import core.lexer.Token;
 
-public class Factor extends ASTNode {
+public class Factor extends Term {
 
 	// 3/4 of these will be null
 	Identifier ident;
@@ -26,9 +26,9 @@ public class Factor extends ASTNode {
 		if (ident != null)
 			return ident.toString();
 		if (num != null)
-			return num.toString();
+			return num.getText() + ":int";
 		if (boollit != null)
-			return boollit.toString();
+			return boollit.getText() + ":int";
 		return "factor";
 	}
 

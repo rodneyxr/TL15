@@ -5,7 +5,6 @@ import java.util.List;
 
 public class IfStatement extends Statement {
 
-	Expression expression;
 	StatementSequence statements;
 
 	// may be null

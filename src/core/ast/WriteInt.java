@@ -5,8 +5,6 @@ import java.util.List;
 
 public class WriteInt extends Statement {
 
-	Expression expression;
-	
 	public WriteInt() {
 		super(StatementType.WRITEINT);
 	}

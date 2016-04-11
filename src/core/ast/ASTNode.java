@@ -59,12 +59,55 @@ public abstract class ASTNode {
 	/*
 	 * Sets the boolean printed to false for all nodes under this instance.
 	 */
-	private void resetVisited() {
+	public void resetVisited() {
 		visited = false;
 		for (ASTNode child : getChildren()) {
 			if (!visited)
 				continue;
 			child.resetVisited();
+		}
+	}
+
+	private ASTNode parent;
+	protected void setParent(ASTNode parent) {
+		this.parent = parent;
+	}
+
+	public void clean() {
+		List<ASTNode> children = getChildren();
+		if (parent != null) {
+			if (children.size() == 1) {
+				if (this instanceof Term) {
+					Term term = (Term) this;
+					if (parent instanceof Term) {
+						Term parentTerm = (Term) parent;
+						System.out.println(parentTerm + " -> " + term);
+						parentTerm.term = term.factor;
+					} else if (parent instanceof SimpleExpression) {
+						SimpleExpression simpexpr = (SimpleExpression) parent;
+						simpexpr.term = term.factor;
+					}
+				}
+				// if (parent instanceof Statement) {
+				// Statement stmt = (Statement) parent;
+				// ASTNode child = children.get(0);
+				// if (child instanceof SimpleExpression) {
+				// stmt.expression = ((SimpleExpression) child).term;
+				// }
+				// } else if (parent instanceof SimpleExpression) {
+				// System.out.println(this);
+				// SimpleExpression simpexpr = (SimpleExpression) parent;
+				// ASTNode child = children.get(0);
+				// if (child instanceof Term) {
+				// simpexpr.term = ((Term) child).factor;
+				// }
+				// }
+			}
+		}
+
+		parent = this;
+		for (ASTNode child : getChildren()) {
+			child.clean();
 		}
 	}
 

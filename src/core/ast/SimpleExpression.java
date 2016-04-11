@@ -3,9 +3,12 @@ package core.ast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleExpression extends ASTNode {
+public class SimpleExpression extends Expression {
 
 	Term term;
+
+	// optional
+	String additive;
 	SimpleExpression simpleExpression;
 
 	@Override
@@ -19,7 +22,9 @@ public class SimpleExpression extends ASTNode {
 
 	@Override
 	public String toString() {
-		// TODO implement this
+		if (additive != null) {
+			return additive + ":int";
+		}
 		return "simpexpr";
 	}
 

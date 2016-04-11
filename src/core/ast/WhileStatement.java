@@ -5,7 +5,6 @@ import java.util.List;
 
 public class WhileStatement extends Statement {
 
-	Expression expression;
 	StatementSequence statements;
 
 	public WhileStatement() {

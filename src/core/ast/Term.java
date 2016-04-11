@@ -3,10 +3,13 @@ package core.ast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Term extends ASTNode {
+public class Term extends SimpleExpression {
 
 	Factor factor;
-	Term term; // optional
+	
+	// optional
+	String multiplicative;
+	Term term;
 
 	@Override
 	public List<ASTNode> getChildren() {
@@ -19,7 +22,9 @@ public class Term extends ASTNode {
 
 	@Override
 	public String toString() {
-		// TODO: implement this
+		if (multiplicative != null) {
+			return multiplicative + ":int";
+		}
 		return "term";
 	}
 

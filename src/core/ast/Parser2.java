@@ -34,12 +34,13 @@ public class Parser2 {
 		statementStack = new Stack<>();
 		try {
 			ast = program();
+			ast.clean();
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 			System.exit(1);
 		}
 	}
-
+	
 	public Token token(TokenType type) throws Exception {
 		Token token = stream.token();
 		if (token.isType(type)) {
@@ -133,8 +134,8 @@ public class Parser2 {
 		}
 	}
 
-	public AssignmentStatement assignment() throws Exception {
-		AssignmentStatement assign = new AssignmentStatement();
+	public Assignment assignment() throws Exception {
+		Assignment assign = new Assignment();
 		assign.identifier = ident();
 		token(TokenType.ASGN);
 		if (stream.token().isType(TokenType.READINT)) {
@@ -218,6 +219,7 @@ public class Parser2 {
 		term.factor = factor();
 		Token token = stream.token();
 		if (token.isType(TokenType.MULTIPLICATIVE)) {
+			term.multiplicative = token.getText();
 			token(TokenType.MULTIPLICATIVE);
 			term.term = term();
 		}

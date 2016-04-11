@@ -9,8 +9,8 @@ digraph G {
     8[label="writeint",shape=box];
     9[label="expression",shape=box];
     10[label="simpexpr",shape=box];
-    11[label="term",shape=box];
-    12[label="num(2)",shape=box];
+    11[label="*:int",shape=box];
+    12[label="2:int",shape=box];
     13[label="term",shape=box];
     14[label="X:int",shape=box];
 
