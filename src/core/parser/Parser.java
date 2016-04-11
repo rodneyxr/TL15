@@ -7,15 +7,29 @@ import core.lexer.TokenType;
 public class Parser {
 
 	private TokenStream stream;
+	private TreeNode parseTree;
 
 	public Parser(TokenStream stream) {
 		this.stream = stream;
 	}
 
-	public void token(TokenType type, TreeNode node) {
+	public TreeNode getParseTree() {
+		if (parseTree == null) {
+			parse();
+		}
+		return parseTree;
+	}
+
+	public void parse() {
+		program();
+	}
+
+	public void token(TokenType type, TreeNode node, boolean addNode) {
 		if (stream.token().isType(type)) {
-			TreeNode tokenNode = new TreeNode(null, stream.token());
-			node.addChild(tokenNode);
+			if (addNode) {
+				TreeNode tokenNode = new TreeNode(null, stream.token());
+				node.addChild(tokenNode);
+			}
 			stream.next();
 		} else {
 			System.err.println("PARSER ERROR: " + stream.token() + " != " + type);
@@ -23,17 +37,19 @@ public class Parser {
 		}
 	}
 
-	public void program(TreeNode node) {
+	public void program() {
 		Token token = stream.token();
 		if (token.isType(TokenType.PROGRAM)) {
-			TreeNode prog = new TreeNode("PROGRAM", token);
-			node.addChild(prog);
+			parseTree = new TreeNode("program", token);
 			stream.next();
 
-			declarations(prog);
-			token(TokenType.BEGIN, prog);
-			statementSequence(prog);
-			token(TokenType.END, prog);
+			TreeNode decListNode = new TreeNode("decl list", null);
+			parseTree.addChild(decListNode);
+			declarations(decListNode);
+
+			token(TokenType.BEGIN, parseTree, false);
+			statementSequence(parseTree);
+			token(TokenType.END, parseTree, false);
 		} else {
 			System.err.println("PARSER ERROR: program; " + token);
 			System.exit(1);
@@ -43,30 +59,24 @@ public class Parser {
 	public void declarations(TreeNode node) {
 		Token token = stream.token();
 		if (token.isType(TokenType.VAR)) {
-			TreeNode var = new TreeNode("VAR", token);
+			TreeNode var = new TreeNode("decl", null);
 			node.addChild(var);
 			stream.next();
 
-			token(TokenType.ident, var);
-			token(TokenType.AS, var);
+			token(TokenType.ident, var, true);
+			token(TokenType.AS, var, false);
 			type(var);
-			token(TokenType.SC, var);
+			token(TokenType.SC, var, false);
 			declarations(var);
-		} else {
-			return;
 		}
 	}
 
 	public void type(TreeNode node) {
 		Token token = stream.token();
 		if (token.isType(TokenType.INT)) {
-			TreeNode intNode = new TreeNode("INT", token);
-			node.addChild(intNode);
-			stream.next();
+			token(TokenType.INT, node, false);
 		} else if (token.isType(TokenType.BOOL)) {
-			TreeNode boolNode = new TreeNode("BOOL", token);
-			node.addChild(boolNode);
-			stream.next();
+			token(TokenType.BOOL, node, false);
 		} else {
 			System.err.println("PARSER ERROR: type; " + token);
 			System.exit(1);
@@ -77,7 +87,7 @@ public class Parser {
 		Token token = stream.token();
 		if (!token.isType(TokenType.END)) {
 			statement(node);
-			token(TokenType.SC, node);
+			token(TokenType.SC, node, false);
 			statementSequence(node);
 		} else {
 			return;
@@ -115,9 +125,9 @@ public class Parser {
 			node.addChild(assignNode);
 			stream.next();
 
-			token(TokenType.ASGN, node);
+			token(TokenType.ASGN, node, true);
 			if (stream.token().isType(TokenType.READINT)) {
-				token(TokenType.READINT, node);
+				token(TokenType.READINT, node, true);
 			} else {
 				expression(node);
 			}
@@ -135,10 +145,10 @@ public class Parser {
 			stream.next();
 
 			expression(node);
-			token(TokenType.THEN, node);
+			token(TokenType.THEN, node, false);
 			statementSequence(node);
 			elseClause(node);
-			token(TokenType.END, node);
+			token(TokenType.END, node, false);
 		} else {
 			System.err.println("PARSER ERROR: ifStatement; " + token);
 			System.exit(1);
@@ -167,9 +177,9 @@ public class Parser {
 			stream.next();
 
 			expression(node);
-			token(TokenType.DO, node);
+			token(TokenType.DO, node, false);
 			statementSequence(node);
-			token(TokenType.END, node);
+			token(TokenType.END, node, false);
 		} else {
 			System.err.println("PARSER ERROR: whileStatement; " + token);
 			System.exit(1);
@@ -194,7 +204,7 @@ public class Parser {
 		simpleExpression(node);
 		Token token = stream.token();
 		if (token.isType(TokenType.COMPARE)) {
-			token(TokenType.COMPARE, node);
+			token(TokenType.COMPARE, node, true);
 			expression(node);
 		}
 	}
@@ -203,7 +213,7 @@ public class Parser {
 		term(node);
 		Token token = stream.token();
 		if (token.isType(TokenType.ADDITIVE)) {
-			token(TokenType.ADDITIVE, node);
+			token(TokenType.ADDITIVE, node, true);
 			simpleExpression(node);
 		}
 	}
@@ -212,7 +222,7 @@ public class Parser {
 		factor(node);
 		Token token = stream.token();
 		if (token.isType(TokenType.MULTIPLICATIVE)) {
-			token(TokenType.MULTIPLICATIVE, node);
+			token(TokenType.MULTIPLICATIVE, node, true);
 			term(node);
 		}
 	}
@@ -223,13 +233,13 @@ public class Parser {
 		case ident:
 		case num:
 		case boollit:
-			token(token.getType(), node);
+			token(token.getType(), node, true);
 			break;
 
 		case LP:
-			token(TokenType.LP, node);
+			token(TokenType.LP, node, true);
 			expression(node);
-			token(TokenType.RP, node);
+			token(TokenType.RP, node, true);
 			break;
 
 		default:

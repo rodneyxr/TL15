@@ -1,26 +1,23 @@
-package core.parser;
+package core.ast;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import core.lexer.Token;
-
-public class TreeNode {
+public abstract class ASTNode {
 
 	private static final AtomicInteger ID_GENERATOR = new AtomicInteger();
 	private int id; // unique ID to be used when creating Graphviz DOT file
-	private boolean visited = false; // used for graph traversal
+	protected boolean visited = false; // used for graph traversal
 
-	List<TreeNode> children = new ArrayList<>();
-	String nonterminal;
-	Token token;
-
-	public TreeNode(String nonterminal, Token token) {
-		this.nonterminal = nonterminal;
-		this.token = token;
+	public ASTNode() {
 		id = ID_GENERATOR.getAndIncrement();
 	}
+
+	public abstract List<ASTNode> getChildren();
+
+	@Override
+	public abstract String toString();
 
 	/**
 	 * Gets the unique ID of this node.
@@ -31,40 +28,11 @@ public class TreeNode {
 		return id;
 	}
 
-	public void addChild(TreeNode node) {
-		children.add(node);
-	}
-
-	public String getNonTerminal() {
-		return nonterminal;
-	}
-
-	public Token getToken() {
-		return token;
-	}
-
-	public List<TreeNode> getChildren() {
-		return children;
-	}
-
-	/**
-	 * Get all nodes under this node. The list returned will also include
-	 * itself.
-	 * 
-	 * @return A list of all nodes.
-	 */
-	public ArrayList<TreeNode> getAllNodes() {
-		ArrayList<TreeNode> childs = new ArrayList<>();
+	public ArrayList<ASTNode> getAllNodes() {
+		ArrayList<ASTNode> childs = new ArrayList<>();
 		getAllNodesImpl(childs);
 		resetVisited();
 		return childs;
-	}
-
-	@Override
-	public String toString() {
-		if (token == null)
-			return nonterminal;
-		return token.toString();
 	}
 
 	/**
@@ -75,13 +43,13 @@ public class TreeNode {
 	 *            The list that holds all nodes.
 	 * @return The list that holds all nodes.
 	 */
-	private ArrayList<TreeNode> getAllNodesImpl(ArrayList<TreeNode> childs) {
+	private ArrayList<ASTNode> getAllNodesImpl(ArrayList<ASTNode> childs) {
 		if (visited)
 			return childs;
 		childs.add(this);
 		visited = true;
 
-		for (TreeNode child : children) {
+		for (ASTNode child : getChildren()) {
 			child.getAllNodesImpl(childs);
 		}
 
@@ -93,10 +61,11 @@ public class TreeNode {
 	 */
 	private void resetVisited() {
 		visited = false;
-		for (TreeNode child : children) {
+		for (ASTNode child : getChildren()) {
 			if (!visited)
 				continue;
 			child.resetVisited();
 		}
 	}
+
 }

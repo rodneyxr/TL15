@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import core.ast.Parser2;
 import core.lexer.Lexer;
 import core.lexer.TokenStream;
-import core.parser.Parser;
-import core.parser.TreeNode;
+import core.tools.Utils;
 
 public class Main {
 
@@ -38,12 +38,15 @@ public class Main {
 		// create the lexer
 		Lexer lexer = new Lexer(scanner);
 		TokenStream stream = new TokenStream(lexer);
-		Parser parser = new Parser(stream);
+		Parser2 parser = new Parser2(stream);
 
-		parser.program(new TreeNode(null, null));
+		parser.parse();
 		System.out.println("Compiled Successfully!");
-		// System.out.println(stream);
 
+		String dot = Utils.generateDOT(parser.getAST());
+		String astFilePath = sourceFile.getAbsolutePath().replaceFirst("\\.tl$", ".ast.dot");
+		Utils.saveDOTToFile(dot, astFilePath);
+		System.out.println("AST DOT file written to: " + astFilePath);
 	}
 
 }
