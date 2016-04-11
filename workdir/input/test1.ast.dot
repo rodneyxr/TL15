@@ -1,0 +1,42 @@
+digraph G {
+    0[label="PROGRAM",shape=box,fillcolor=gray,style=filled];
+    1[label="decl list"];
+    2[label="VAR",shape=box,fillcolor=gray,style=filled];
+    3[label="ident(X)",shape=box,fillcolor=gray,style=filled];
+    4[label="AS",shape=box,fillcolor=gray,style=filled];
+    5[label="INT",shape=box,fillcolor=gray,style=filled];
+    6[label="SC",shape=box,fillcolor=gray,style=filled];
+    7[label="BEGIN",shape=box,fillcolor=gray,style=filled];
+    8[label="STATEMENT"];
+    9[label="ident(X)",shape=box,fillcolor=gray,style=filled];
+    10[label="ASGN",shape=box,fillcolor=gray,style=filled];
+    11[label="READINT",shape=box,fillcolor=gray,style=filled];
+    12[label="SC",shape=box,fillcolor=gray,style=filled];
+    13[label="STATEMENT"];
+    14[label="WRITEINT",shape=box,fillcolor=gray,style=filled];
+    15[label="num(2)",shape=box,fillcolor=gray,style=filled];
+    16[label="MULTIPLICATIVE(*)",shape=box,fillcolor=gray,style=filled];
+    17[label="ident(X)",shape=box,fillcolor=gray,style=filled];
+    18[label="SC",shape=box,fillcolor=gray,style=filled];
+    19[label="END",shape=box,fillcolor=gray,style=filled];
+
+    0 -> 1;
+    0 -> 7;
+    0 -> 8;
+    0 -> 9;
+    0 -> 10;
+    0 -> 11;
+    0 -> 12;
+    0 -> 13;
+    0 -> 14;
+    0 -> 15;
+    0 -> 16;
+    0 -> 17;
+    0 -> 18;
+    0 -> 19;
+    1 -> 2;
+    2 -> 3;
+    2 -> 4;
+    2 -> 5;
+    2 -> 6;
+}

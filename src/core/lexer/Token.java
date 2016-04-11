@@ -21,6 +21,10 @@ public class Token {
 	public TokenType getType() {
 		return type;
 	}
+	
+	public String getText() {
+		return text;
+	}
 
 	public String toString() {
 		if (text != null) {

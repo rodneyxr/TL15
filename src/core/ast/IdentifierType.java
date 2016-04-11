@@ -1,14 +1,14 @@
 package core.ast;
 
-public enum DeclarationType {
-	INT("int"), BOOL("bool");
+public enum IdentifierType {
+	BOOL("bool"), INT("int");
 
 	String str;
 
-	DeclarationType(String str) {
+	IdentifierType(String str) {
 		this.str = str;
 	}
-	
+
 	@Override
 	public String toString() {
 		return str;

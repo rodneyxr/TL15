@@ -5,7 +5,6 @@ import java.util.List;
 
 public class Declaration extends ASTNode {
 
-	DeclarationType type;
 	Identifier ident;
 
 	@Override
@@ -16,7 +15,7 @@ public class Declaration extends ASTNode {
 
 	@Override
 	public String toString() {
-		return String.format("decl:'%s':%s", ident, type);
+		return String.format("decl:'%s':%s", ident.varName, ident.getType());
 	}
 
 }

@@ -1,5 +1,6 @@
 package core.ast;
 
+import java.util.HashMap;
 import java.util.Stack;
 
 import core.lexer.Token;
@@ -8,6 +9,7 @@ import core.lexer.TokenType;
 
 public class Parser2 {
 
+	static HashMap<String, IdentifierType> symbolTable;
 	private TokenStream stream;
 	private ASTNode ast;
 
@@ -27,6 +29,7 @@ public class Parser2 {
 	}
 
 	public void parse() {
+		symbolTable = new HashMap<>();
 		declarations = new Declarations();
 		statementStack = new Stack<>();
 		try {
@@ -77,7 +80,7 @@ public class Parser2 {
 		token(TokenType.VAR);
 		declaration.ident = ident();
 		token(TokenType.AS);
-		declaration.type = type();
+		Parser2.symbolTable.put(declaration.ident.varName, type());
 		token(TokenType.SC);
 		declarations();
 		return declaration;
@@ -86,18 +89,18 @@ public class Parser2 {
 	public Identifier ident() throws Exception {
 		Token token = token(TokenType.ident);
 		Identifier ident = new Identifier();
-		ident.varName = token.toString();
+		ident.varName = token.getText();
 		return ident;
 	}
 
-	public DeclarationType type() throws Exception {
+	public IdentifierType type() throws Exception {
 		Token token = stream.token();
 		if (token.isType(TokenType.INT)) {
 			token(TokenType.INT);
-			return DeclarationType.INT;
+			return IdentifierType.INT;
 		} else if (token.isType(TokenType.BOOL)) {
 			token(TokenType.BOOL);
-			return DeclarationType.BOOL;
+			return IdentifierType.BOOL;
 		} else {
 			throw new Exception("PARSER ERROR: type; " + token);
 		}

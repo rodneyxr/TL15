@@ -6,6 +6,11 @@ import java.util.List;
 public class Identifier extends ASTNode {
 
 	String varName;
+	// IdentifierType type;
+
+	public IdentifierType getType() {
+		return Parser2.symbolTable.get(varName);
+	}
 
 	@Override
 	public List<ASTNode> getChildren() {
@@ -15,7 +20,7 @@ public class Identifier extends ASTNode {
 
 	@Override
 	public String toString() {
-		return String.format("%s", varName);
+		return String.format("%s:%s", varName, getType());
 	}
 
 }

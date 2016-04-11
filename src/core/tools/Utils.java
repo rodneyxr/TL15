@@ -134,6 +134,7 @@ public class Utils {
 			// dot.append(",shape=box,fillcolor=gray,style=filled");
 			// break;
 			// }
+			dot.append(",shape=box");
 
 			dot.append("];\n");
 		}
