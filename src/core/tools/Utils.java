@@ -51,25 +51,6 @@ public class Utils {
 
 			if (node.getToken() != null)
 				switch (node.getToken().getType()) {
-				// case FlowPoint:
-				// dot.append(",shape=box");
-				// break;
-				// case ProgEnter:
-				// dot.append(",shape=mbox,fillcolor=green,style=filled");
-				// break;
-				// case ProgExit:
-				// dot.append(",shape=mbox,fillcolor=red,style=filled");
-				// break;
-				// case IfStat:
-				// case ElseIfStat:
-				// dot.append(",shape=diamond,fillcolor=yellow,style=filled");
-				// break;
-				// case ElseStat:
-				// dot.append(",shape=circle,fillcolor=yellow,style=filled");
-				// break;
-				// case WhileStatement:
-				// dot.append(",shape=diamond,fillcolor=orange,style=filled");
-				// break;
 				default:
 					dot.append(",shape=box,fillcolor=gray,style=filled");
 					break;
@@ -109,31 +90,6 @@ public class Utils {
 			dot.append(node.toString().replaceAll("\"", "\\\""));
 			dot.append("\"");
 
-			// if (node.getToken() != null)
-			// switch (node.getToken().getType()) {
-			// case FlowPoint:
-			// dot.append(",shape=box");
-			// break;
-			// case ProgEnter:
-			// dot.append(",shape=mbox,fillcolor=green,style=filled");
-			// break;
-			// case ProgExit:
-			// dot.append(",shape=mbox,fillcolor=red,style=filled");
-			// break;
-			// case IfStat:
-			// case ElseIfStat:
-			// dot.append(",shape=diamond,fillcolor=yellow,style=filled");
-			// break;
-			// case ElseStat:
-			// dot.append(",shape=circle,fillcolor=yellow,style=filled");
-			// break;
-			// case WhileStatement:
-			// dot.append(",shape=diamond,fillcolor=orange,style=filled");
-			// break;
-			// default:
-			// dot.append(",shape=box,fillcolor=gray,style=filled");
-			// break;
-			// }
 			dot.append(",shape=box");
 
 			dot.append("];\n");
