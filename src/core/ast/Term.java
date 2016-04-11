@@ -5,11 +5,29 @@ import java.util.List;
 
 public class Term extends SimpleExpression {
 
-	Factor factor;
+	private Factor factor;
 	
 	// optional
 	String multiplicative;
-	Term term;
+	private Term term;
+	
+	public Factor getFactor() {
+		return factor;
+	}
+
+	public void setFactor(Factor factor) {
+		this.factor = factor;
+		factor.setParent(factor);
+	}
+
+	public Term getTerm() {
+		return term;
+	}
+
+	public void setTerm(Term term) {
+		this.term = term;
+		term.setParent(this);
+	}
 
 	@Override
 	public List<ASTNode> getChildren() {

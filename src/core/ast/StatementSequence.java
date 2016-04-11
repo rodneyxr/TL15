@@ -5,7 +5,12 @@ import java.util.List;
 
 public class StatementSequence extends ASTNode {
 
-	List<Statement> statements = new ArrayList<>();
+	private List<Statement> statements = new ArrayList<>();
+	
+	public void addStatement(Statement statement) {
+		statements.add(statement);
+		statement.setParent(this);
+	}
 
 	@Override
 	public List<ASTNode> getChildren() {

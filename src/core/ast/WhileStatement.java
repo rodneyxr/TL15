@@ -5,7 +5,16 @@ import java.util.List;
 
 public class WhileStatement extends Statement {
 
-	StatementSequence statements;
+	private StatementSequence statements;
+
+	public StatementSequence getStatements() {
+		return statements;
+	}
+
+	public void setStatements(StatementSequence statements) {
+		this.statements = statements;
+		statements.setParent(this);
+	}
 
 	public WhileStatement() {
 		super(StatementType.WHILESTATMENT);
@@ -14,7 +23,7 @@ public class WhileStatement extends Statement {
 	@Override
 	public List<ASTNode> getChildren() {
 		List<ASTNode> children = new ArrayList<>();
-		children.add(expression);
+		children.add(getExpression());
 		children.add(statements);
 		return children;
 	}

@@ -5,8 +5,28 @@ import java.util.List;
 
 public class Expression extends ASTNode {
 
-	SimpleExpression left;
-	Expression right;
+	private SimpleExpression left;
+	
+	// optional
+	private Expression right;
+
+	public SimpleExpression getLeft() {
+		return left;
+	}
+
+	public void setLeft(SimpleExpression left) {
+		this.left = left;
+		left.setParent(this);
+	}
+
+	public Expression getRight() {
+		return right;
+	}
+
+	public void setRight(Expression right) {
+		this.right = right;
+		right.setParent(this);
+	}
 
 	@Override
 	public List<ASTNode> getChildren() {

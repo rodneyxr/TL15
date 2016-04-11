@@ -12,12 +12,13 @@ public class WriteInt extends Statement {
 	@Override
 	public List<ASTNode> getChildren() {
 		List<ASTNode> children = new ArrayList<>();
-		children.add(expression);
+		children.add(getExpression());
 		return children;
 	}
+
 	@Override
 	public String toString() {
 		return "writeint";
 	}
-	
+
 }

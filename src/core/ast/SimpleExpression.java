@@ -5,11 +5,29 @@ import java.util.List;
 
 public class SimpleExpression extends Expression {
 
-	Term term;
+	private Term term;
 
 	// optional
 	String additive;
-	SimpleExpression simpleExpression;
+	private SimpleExpression simpleExpression;
+
+	public Term getTerm() {
+		return term;
+	}
+
+	public void setTerm(Term term) {
+		this.term = term;
+		term.setParent(this);
+	}
+
+	public SimpleExpression getSimpleExpression() {
+		return simpleExpression;
+	}
+
+	public void setSimpleExpression(SimpleExpression simpleExpression) {
+		this.simpleExpression = simpleExpression;
+		simpleExpression.setParent(this);
+	}
 
 	@Override
 	public List<ASTNode> getChildren() {

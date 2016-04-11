@@ -5,7 +5,16 @@ import java.util.List;
 
 public class Declaration extends ASTNode {
 
-	Identifier ident;
+	private Identifier ident;
+
+	public Identifier getIdent() {
+		return ident;
+	}
+
+	public void setIdent(Identifier ident) {
+		this.ident = ident;
+		ident.setParent(this);
+	}
 
 	@Override
 	public List<ASTNode> getChildren() {

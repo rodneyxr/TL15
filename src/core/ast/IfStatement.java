@@ -5,10 +5,28 @@ import java.util.List;
 
 public class IfStatement extends Statement {
 
-	StatementSequence statements;
+	private StatementSequence statements;
 
 	// may be null
-	ElseClause elseClause;
+	private ElseClause elseClause;
+
+	public StatementSequence getStatements() {
+		return statements;
+	}
+
+	public void setStatements(StatementSequence statements) {
+		this.statements = statements;
+		statements.setParent(this);
+	}
+
+	public ElseClause getElseClause() {
+		return elseClause;
+	}
+
+	public void setElseClause(ElseClause elseClause) {
+		this.elseClause = elseClause;
+		elseClause.setParent(this);
+	}
 
 	public IfStatement() {
 		super(StatementType.IFSTATMENT);
@@ -17,7 +35,7 @@ public class IfStatement extends Statement {
 	@Override
 	public List<ASTNode> getChildren() {
 		List<ASTNode> children = new ArrayList<>();
-		children.add(expression);
+		children.add(getExpression());
 		children.add(statements);
 		if (elseClause != null)
 			children.add(elseClause);

@@ -5,7 +5,16 @@ import java.util.List;
 
 public class ElseClause extends ASTNode {
 
-	StatementSequence statements;
+	private StatementSequence statements;
+
+	public StatementSequence getStatements() {
+		return statements;
+	}
+
+	public void setStatements(StatementSequence statements) {
+		this.statements = statements;
+		statements.setParent(this);
+	}
 
 	@Override
 	public List<ASTNode> getChildren() {

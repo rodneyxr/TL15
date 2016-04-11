@@ -5,8 +5,13 @@ import java.util.List;
 
 public class Declarations extends ASTNode {
 
-	List<Declaration> declarations = new ArrayList<>();
+	private List<Declaration> declarations = new ArrayList<>();
 
+	public void addDeclaration(Declaration declaration) {
+		declarations.add(declaration);
+		declaration.setParent(this);
+	}
+	
 	@Override
 	public List<ASTNode> getChildren() {
 		List<ASTNode> children = new ArrayList<>();

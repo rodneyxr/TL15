@@ -9,7 +9,7 @@ public class Assignment extends Statement {
 
 	// one of these will be null
 	// Expression expression;
-	ReadInt readint;
+	private ReadInt readint;
 	
 	public Identifier getIdentifier() {
 		return identifier;
@@ -33,8 +33,8 @@ public class Assignment extends Statement {
 	public List<ASTNode> getChildren() {
 		List<ASTNode> children = new ArrayList<>();
 		children.add(identifier);
-		if (expression != null)
-			children.add(expression);
+		if (getExpression() != null)
+			children.add(getExpression());
 		if (readint != null)
 			children.add(readint);
 		return children;

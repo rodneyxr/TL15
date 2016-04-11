@@ -57,10 +57,10 @@ public class Parser2 {
 		if (token.isType(TokenType.PROGRAM)) {
 			prog = new Program();
 			token(TokenType.PROGRAM);
-			prog.declarations = declarations();
+			prog.setDeclarations(declarations());
 			token(TokenType.BEGIN);
 			statementStack.push(new StatementSequence());
-			prog.statementSequence = statementSequence();
+			prog.setStatementSequence(statementSequence());
 			statementStack.pop();
 			return prog;
 		} else {
@@ -71,7 +71,7 @@ public class Parser2 {
 	public Declarations declarations() throws Exception {
 		Token token = stream.token();
 		if (token.isType(TokenType.VAR)) {
-			declarations.declarations.add(declaration());
+			declarations.addDeclaration(declaration());
 		}
 		return declarations;
 	}
@@ -79,9 +79,9 @@ public class Parser2 {
 	public Declaration declaration() throws Exception {
 		Declaration declaration = new Declaration();
 		token(TokenType.VAR);
-		declaration.ident = ident();
+		declaration.setIdent(ident());
 		token(TokenType.AS);
-		Parser2.symbolTable.put(declaration.ident.varName, type());
+		Parser2.symbolTable.put(declaration.getIdent().varName, type());
 		token(TokenType.SC);
 		declarations();
 		return declaration;
@@ -111,7 +111,7 @@ public class Parser2 {
 		StatementSequence statList = statementStack.peek();
 		Token token = stream.token();
 		if (!token.isType(TokenType.END)) {
-			statList.statements.add(statement());
+			statList.addStatement(statement());
 			token(TokenType.SC);
 			statementSequence();
 		}
@@ -136,13 +136,13 @@ public class Parser2 {
 
 	public Assignment assignment() throws Exception {
 		Assignment assign = new Assignment();
-		assign.identifier = ident();
+		assign.setIdentifier(ident());
 		token(TokenType.ASGN);
 		if (stream.token().isType(TokenType.READINT)) {
 			token(TokenType.READINT);
-			assign.readint = new ReadInt();
+			assign.setReadInt(new ReadInt());
 		} else {
-			assign.expression = expression();
+			assign.setExpression(expression());
 		}
 		return assign;
 	}
@@ -150,12 +150,12 @@ public class Parser2 {
 	public IfStatement ifStatement() throws Exception {
 		IfStatement ifstat = new IfStatement();
 		token(TokenType.IF);
-		ifstat.expression = expression();
+		ifstat.setExpression(expression());
 		token(TokenType.THEN);
 		statementStack.push(new StatementSequence());
-		ifstat.statements = statementSequence();
+		ifstat.setStatements(statementSequence());
 		statementStack.pop();
-		ifstat.elseClause = elseClause();
+		ifstat.setElseClause(elseClause());
 		token(TokenType.END);
 		return ifstat;
 	}
@@ -166,7 +166,7 @@ public class Parser2 {
 			token(TokenType.ELSE);
 			ElseClause elseClause = new ElseClause();
 			statementStack.push(new StatementSequence());
-			elseClause.statements = statementSequence();
+			elseClause.setStatements(statementSequence());
 			statementStack.pop();
 			return elseClause;
 		}
@@ -176,10 +176,10 @@ public class Parser2 {
 	public WhileStatement whileStatement() throws Exception {
 		WhileStatement whileStat = new WhileStatement();
 		token(TokenType.WHILE);
-		whileStat.expression = expression();
+		whileStat.setExpression(expression());
 		token(TokenType.DO);
 		statementStack.push(new StatementSequence());
-		whileStat.statements = statementSequence();
+		whileStat.setStatements(statementSequence());
 		statementStack.pop();
 		token(TokenType.END);
 		return whileStat;
@@ -188,40 +188,40 @@ public class Parser2 {
 	public WriteInt writeInt() throws Exception {
 		WriteInt writeInt = new WriteInt();
 		token(TokenType.WRITEINT);
-		writeInt.expression = expression();
+		writeInt.setExpression(expression());
 		return writeInt;
 	}
 
 	public Expression expression() throws Exception {
 		Expression expr = new Expression();
-		expr.left = simpleExpression();
+		expr.setLeft(simpleExpression());
 		Token token = stream.token();
 		if (token.isType(TokenType.COMPARE)) {
 			token(TokenType.COMPARE);
-			expr.right = expression();
+			expr.setRight(expression());
 		}
 		return expr;
 	}
 
 	public SimpleExpression simpleExpression() throws Exception {
 		SimpleExpression simpExpr = new SimpleExpression();
-		simpExpr.term = term();
+		simpExpr.setTerm(term());
 		Token token = stream.token();
 		if (token.isType(TokenType.ADDITIVE)) {
 			token(TokenType.ADDITIVE);
-			simpExpr.simpleExpression = simpleExpression();
+			simpExpr.setSimpleExpression(simpleExpression());
 		}
 		return simpExpr;
 	}
 
 	public Term term() throws Exception {
 		Term term = new Term();
-		term.factor = factor();
+		term.setFactor(factor());
 		Token token = stream.token();
 		if (token.isType(TokenType.MULTIPLICATIVE)) {
 			term.multiplicative = token.getText();
 			token(TokenType.MULTIPLICATIVE);
-			term.term = term();
+			term.setTerm(term());
 		}
 		return term;
 	}

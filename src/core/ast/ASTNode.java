@@ -69,6 +69,8 @@ public abstract class ASTNode {
 	}
 
 	private ASTNode parent;
+
+	// protected abstract void setParent(ASTNode parent);
 	protected void setParent(ASTNode parent) {
 		this.parent = parent;
 	}
@@ -81,27 +83,28 @@ public abstract class ASTNode {
 					Term term = (Term) this;
 					if (parent instanceof Term) {
 						Term parentTerm = (Term) parent;
-						System.out.println(parentTerm + " -> " + term);
-						parentTerm.term = term.factor;
+						parentTerm.setTerm(term.getFactor());
 					} else if (parent instanceof SimpleExpression) {
 						SimpleExpression simpexpr = (SimpleExpression) parent;
-						simpexpr.term = term.factor;
+						simpexpr.setTerm(term.getFactor());
+					}
+				} else if (this instanceof SimpleExpression) {
+					SimpleExpression simple = (SimpleExpression) this;
+					/*if (parent instanceof Expression) {
+						Expression parentExpr = (Expression) parent;
+						parentExpr.setLeft(simple.getTerm());
+					} else */
+					if (parent instanceof Statement) {
+						Statement parentStat = (Statement) parent;
+						parentStat.setExpression(simple.getTerm());
+					}
+				} else if (this instanceof Expression) {
+					Expression expr = (Expression) this;
+					if (parent instanceof Statement) {
+						Statement parentStat = (Statement) parent;
+						parentStat.setExpression(expr.getLeft());
 					}
 				}
-				// if (parent instanceof Statement) {
-				// Statement stmt = (Statement) parent;
-				// ASTNode child = children.get(0);
-				// if (child instanceof SimpleExpression) {
-				// stmt.expression = ((SimpleExpression) child).term;
-				// }
-				// } else if (parent instanceof SimpleExpression) {
-				// System.out.println(this);
-				// SimpleExpression simpexpr = (SimpleExpression) parent;
-				// ASTNode child = children.get(0);
-				// if (child instanceof Term) {
-				// simpexpr.term = ((Term) child).factor;
-				// }
-				// }
 			}
 		}
 
