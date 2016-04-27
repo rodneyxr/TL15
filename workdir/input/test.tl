@@ -1,6 +1,14 @@
 program
+	var FLAG as bool ;
 	var X as int ;
 begin
-	X := readint ;
-	writeint 2 * X ;
+	FLAG := true ;
+	
+	if FLAG then
+		X := 1 ;
+	else
+		X := 0 ;
+	end ;
+	
+	writeint X ;
 end

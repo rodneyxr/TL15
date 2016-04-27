@@ -1,15 +1,33 @@
-package core.ast;
+package core.parser;
 
 import java.util.HashMap;
 import java.util.Stack;
 
+import core.ast.ASTNode;
+import core.ast.Assignment;
+import core.ast.Declaration;
+import core.ast.Declarations;
+import core.ast.ElseClause;
+import core.ast.Expression;
+import core.ast.Factor;
+import core.ast.Identifier;
+import core.ast.IdentifierType;
+import core.ast.IfStatement;
+import core.ast.Program;
+import core.ast.ReadInt;
+import core.ast.SimpleExpression;
+import core.ast.Statement;
+import core.ast.StatementSequence;
+import core.ast.Term;
+import core.ast.WhileStatement;
+import core.ast.WriteInt;
 import core.lexer.Token;
 import core.lexer.TokenStream;
 import core.lexer.TokenType;
 
-public class Parser2 {
+public class Parser {
 
-	static HashMap<String, IdentifierType> symbolTable;
+	public static HashMap<String, IdentifierType> symbolTable;
 	private TokenStream stream;
 	private ASTNode ast;
 
@@ -17,7 +35,7 @@ public class Parser2 {
 	private Declarations declarations;
 	private Stack<StatementSequence> statementStack;
 
-	public Parser2(TokenStream stream) {
+	public Parser(TokenStream stream) {
 		this.stream = stream;
 	}
 
@@ -40,9 +58,11 @@ public class Parser2 {
 			System.exit(1);
 		}
 	}
-	
+
 	public Token token(TokenType type) throws Exception {
 		Token token = stream.token();
+		if (token == null)
+			throw new Exception("PARSER ERROR: reached end of file.");
 		if (token.isType(type)) {
 			stream.next();
 			return token;
@@ -81,7 +101,7 @@ public class Parser2 {
 		token(TokenType.VAR);
 		declaration.setIdent(ident());
 		token(TokenType.AS);
-		Parser2.symbolTable.put(declaration.getIdent().varName, type());
+		Parser.symbolTable.put(declaration.getIdent().getVarName(), type());
 		token(TokenType.SC);
 		declarations();
 		return declaration;
@@ -90,7 +110,7 @@ public class Parser2 {
 	public Identifier ident() throws Exception {
 		Token token = token(TokenType.ident);
 		Identifier ident = new Identifier();
-		ident.varName = token.getText();
+		ident.setVarName(token.getText());
 		return ident;
 	}
 
@@ -110,7 +130,7 @@ public class Parser2 {
 	public StatementSequence statementSequence() throws Exception {
 		StatementSequence statList = statementStack.peek();
 		Token token = stream.token();
-		if (!token.isType(TokenType.END)) {
+		if (!token.isType(TokenType.END) && !token.isType(TokenType.ELSE)) {
 			statList.addStatement(statement());
 			token(TokenType.SC);
 			statementSequence();
@@ -155,7 +175,9 @@ public class Parser2 {
 		statementStack.push(new StatementSequence());
 		ifstat.setStatements(statementSequence());
 		statementStack.pop();
-		ifstat.setElseClause(elseClause());
+		ElseClause elseClause = elseClause();
+		if (elseClause != null)
+			ifstat.setElseClause(elseClause);
 		token(TokenType.END);
 		return ifstat;
 	}
@@ -197,7 +219,7 @@ public class Parser2 {
 		expr.setLeft(simpleExpression());
 		Token token = stream.token();
 		if (token.isType(TokenType.COMPARE)) {
-			expr.compare = token(TokenType.COMPARE);
+			expr.setCompare(token(TokenType.COMPARE));
 			expr.setRight(expression());
 		}
 		return expr;
@@ -208,7 +230,7 @@ public class Parser2 {
 		simpExpr.setTerm(term());
 		Token token = stream.token();
 		if (token.isType(TokenType.ADDITIVE)) {
-			simpExpr.additive = token(TokenType.ADDITIVE);
+			simpExpr.setAdditive(token(TokenType.ADDITIVE));
 			simpExpr.setSimpleExpression(simpleExpression());
 		}
 		return simpExpr;
@@ -219,7 +241,7 @@ public class Parser2 {
 		term.setFactor(factor());
 		Token token = stream.token();
 		if (token.isType(TokenType.MULTIPLICATIVE)) {
-			term.multiplicative = token.getText();
+			term.setMultiplicative(token.getText());
 			token(TokenType.MULTIPLICATIVE);
 			term.setTerm(term());
 		}
@@ -231,20 +253,20 @@ public class Parser2 {
 		Token token = stream.token();
 		switch (token.getType()) {
 		case ident:
-			factor.ident = ident();
+			factor.setIdent(ident());
 			break;
 
 		case num:
-			factor.num = token(TokenType.num);
+			factor.setNum(token(TokenType.num));
 			break;
 
 		case boollit:
-			factor.boollit = token(TokenType.boollit);
+			factor.setBoollit(token(TokenType.boollit));
 			break;
 
 		case LP:
 			token(TokenType.LP);
-			factor.expression = expression();
+			factor.setExpression(expression());
 			token(TokenType.RP);
 			break;
 

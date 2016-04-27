@@ -24,7 +24,7 @@ public class Declaration extends ASTNode {
 
 	@Override
 	public String toString() {
-		return String.format("decl:'%s':%s", ident.varName, ident.getType());
+		return String.format("decl:'%s':%s", ident.getVarName(), ident.getType());
 	}
 
 }

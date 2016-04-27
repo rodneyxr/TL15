@@ -10,7 +10,7 @@ public class SimpleExpression extends Expression {
 	private Term term;
 
 	// optional
-	Token additive;
+	private Token additive;
 	private SimpleExpression simpleExpression;
 
 	public Term getTerm() {
@@ -30,6 +30,14 @@ public class SimpleExpression extends Expression {
 		this.simpleExpression = simpleExpression;
 		simpleExpression.setParent(this);
 	}
+	
+	public Token getAdditive() {
+		return additive;
+	}
+
+	public void setAdditive(Token additive) {
+		this.additive = additive;
+	}
 
 	@Override
 	public List<ASTNode> getChildren() {
@@ -42,8 +50,8 @@ public class SimpleExpression extends Expression {
 
 	@Override
 	public String toString() {
-		if (additive != null) {
-			return additive.getText() + ":int";
+		if (getAdditive() != null) {
+			return getAdditive().getText() + ":int";
 		}
 		return "simpexpr";
 	}

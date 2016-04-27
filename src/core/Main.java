@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import core.ast.Parser2;
 import core.lexer.Lexer;
 import core.lexer.TokenStream;
+import core.parser.Parser;
 import core.tools.Utils;
 
 public class Main {
@@ -38,7 +38,7 @@ public class Main {
 		// create the lexer
 		Lexer lexer = new Lexer(scanner);
 		TokenStream stream = new TokenStream(lexer);
-		Parser2 parser = new Parser2(stream);
+		Parser parser = new Parser(stream);
 
 		parser.parse();
 		System.out.println("Compiled Successfully!");

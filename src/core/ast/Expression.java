@@ -11,7 +11,7 @@ public class Expression extends ASTNode {
 
 	// optional
 	private Expression right;
-	Token compare;
+	private Token compare;
 
 	public SimpleExpression getLeft() {
 		return left;
@@ -30,6 +30,14 @@ public class Expression extends ASTNode {
 		this.right = right;
 		right.setParent(this);
 	}
+	
+	public Token getCompare() {
+		return compare;
+	}
+
+	public void setCompare(Token compare) {
+		this.compare = compare;
+	}
 
 	@Override
 	public List<ASTNode> getChildren() {
@@ -42,8 +50,8 @@ public class Expression extends ASTNode {
 
 	@Override
 	public String toString() {
-		if (compare != null)
-			return compare.getText() + ":bool";
+		if (getCompare() != null)
+			return getCompare().getText() + ":bool";
 		return "expression";
 	}
 

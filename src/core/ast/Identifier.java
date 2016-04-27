@@ -3,12 +3,22 @@ package core.ast;
 import java.util.ArrayList;
 import java.util.List;
 
+import core.parser.Parser;
+
 public class Identifier extends ASTNode {
 
-	String varName;
+	private String varName;
 
 	public IdentifierType getType() {
-		return Parser2.symbolTable.get(varName);
+		return Parser.symbolTable.get(varName);
+	}
+	
+	public String getVarName() {
+		return varName;
+	}
+
+	public void setVarName(String varName) {
+		this.varName = varName;
 	}
 
 	@Override
@@ -19,7 +29,7 @@ public class Identifier extends ASTNode {
 
 	@Override
 	public String toString() {
-		return String.format("%s:%s", varName, getType());
+		return String.format("%s:%s", getVarName(), getType());
 	}
 
 }

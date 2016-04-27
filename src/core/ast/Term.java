@@ -8,7 +8,7 @@ public class Term extends SimpleExpression {
 	private Factor factor;
 	
 	// optional
-	String multiplicative;
+	private String multiplicative;
 	private Term term;
 	
 	public Factor getFactor() {
@@ -29,6 +29,14 @@ public class Term extends SimpleExpression {
 		term.setParent(this);
 	}
 
+	public String getMultiplicative() {
+		return multiplicative;
+	}
+
+	public void setMultiplicative(String multiplicative) {
+		this.multiplicative = multiplicative;
+	}
+	
 	@Override
 	public List<ASTNode> getChildren() {
 		List<ASTNode> children = new ArrayList<>();
@@ -40,8 +48,8 @@ public class Term extends SimpleExpression {
 
 	@Override
 	public String toString() {
-		if (multiplicative != null) {
-			return multiplicative + ":int";
+		if (getMultiplicative() != null) {
+			return getMultiplicative() + ":int";
 		}
 		return "term";
 	}

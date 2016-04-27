@@ -8,27 +8,59 @@ import core.lexer.Token;
 public class Factor extends Term {
 
 	// 3/4 of these will be null
-	Identifier ident;
-	Token num;
-	Token boollit;
-	Expression expression;
+	private Identifier ident;
+	private Token num;
+	private Token boollit;
+	private Expression expression;
+
+	public Identifier getIdent() {
+		return ident;
+	}
+
+	public void setIdent(Identifier ident) {
+		this.ident = ident;
+	}
+
+	public Token getNum() {
+		return num;
+	}
+
+	public void setNum(Token num) {
+		this.num = num;
+	}
+
+	public Token getBoollit() {
+		return boollit;
+	}
+
+	public void setBoollit(Token boollit) {
+		this.boollit = boollit;
+	}
+
+	public Expression getExpression() {
+		return expression;
+	}
+
+	public void setExpression(Expression expression) {
+		this.expression = expression;
+	}
 
 	@Override
 	public List<ASTNode> getChildren() {
 		List<ASTNode> children = new ArrayList<>();
-		if (expression != null)
-			children.add(expression);
+		if (getExpression() != null)
+			children.add(getExpression());
 		return children;
 	}
 
 	@Override
 	public String toString() {
-		if (ident != null)
-			return ident.toString();
-		if (num != null)
-			return num.getText() + ":int";
-		if (boollit != null)
-			return boollit.getText() + ":int";
+		if (getIdent() != null)
+			return getIdent().toString();
+		if (getNum() != null)
+			return getNum().getText() + ":int";
+		if (getBoollit() != null)
+			return getBoollit().getText() + ":int";
 		return "factor";
 	}
 
