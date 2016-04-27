@@ -3,12 +3,15 @@ package core.ast;
 import java.util.ArrayList;
 import java.util.List;
 
+import core.lexer.Token;
+
 public class Expression extends ASTNode {
 
 	private SimpleExpression left;
-	
+
 	// optional
 	private Expression right;
+	Token compare;
 
 	public SimpleExpression getLeft() {
 		return left;
@@ -39,7 +42,8 @@ public class Expression extends ASTNode {
 
 	@Override
 	public String toString() {
-		// TODO implement this
+		if (compare != null)
+			return compare.getText() + ":bool";
 		return "expression";
 	}
 

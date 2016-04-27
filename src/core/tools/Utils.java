@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 import core.ast.ASTNode;
 import core.lexer.TokenStream;
-import core.parser.TreeNode;
 
 public class Utils {
 
@@ -36,47 +35,6 @@ public class Utils {
 	// ... 0 -> 1;
 	// ... 1 -> 2;
 	// }
-	public static String generateDOT(TreeNode root) {
-		ArrayList<TreeNode> nodes = root.getAllNodes();
-
-		StringBuilder dot = new StringBuilder("digraph G {\n");
-
-		// first define all nodes
-		for (TreeNode node : nodes) {
-			dot.append("    ");
-			dot.append(node.getID());
-			dot.append("[label=\"");
-			dot.append(node.toString().replaceAll("\"", "\\\""));
-			dot.append("\"");
-
-			if (node.getToken() != null)
-				switch (node.getToken().getType()) {
-				default:
-					dot.append(",shape=box,fillcolor=gray,style=filled");
-					break;
-				}
-
-			dot.append("];\n");
-		}
-
-		dot.append("\n");
-
-		// wire all parents to their children
-		for (TreeNode node : nodes) {
-			for (TreeNode child : node.getChildren()) {
-				// fp -> child
-				dot.append("    ");
-				dot.append(node.getID());
-				dot.append(" -> ");
-				dot.append(child.getID());
-				dot.append(";\n");
-			}
-		}
-
-		dot.append("}");
-		return dot.toString();
-	}
-
 	public static String generateDOT(ASTNode root) {
 		ArrayList<ASTNode> nodes = root.getAllNodes();
 

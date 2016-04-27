@@ -4,3 +4,4 @@ bin/
 
 # ignore these files
 *.tok
+*.dot

@@ -34,7 +34,7 @@ public class Parser2 {
 		statementStack = new Stack<>();
 		try {
 			ast = program();
-			ast.clean();
+			ast.reduce();
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 			System.exit(1);
@@ -197,7 +197,7 @@ public class Parser2 {
 		expr.setLeft(simpleExpression());
 		Token token = stream.token();
 		if (token.isType(TokenType.COMPARE)) {
-			token(TokenType.COMPARE);
+			expr.compare = token(TokenType.COMPARE);
 			expr.setRight(expression());
 		}
 		return expr;
@@ -208,7 +208,7 @@ public class Parser2 {
 		simpExpr.setTerm(term());
 		Token token = stream.token();
 		if (token.isType(TokenType.ADDITIVE)) {
-			token(TokenType.ADDITIVE);
+			simpExpr.additive = token(TokenType.ADDITIVE);
 			simpExpr.setSimpleExpression(simpleExpression());
 		}
 		return simpExpr;

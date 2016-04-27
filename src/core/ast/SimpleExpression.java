@@ -3,12 +3,14 @@ package core.ast;
 import java.util.ArrayList;
 import java.util.List;
 
+import core.lexer.Token;
+
 public class SimpleExpression extends Expression {
 
 	private Term term;
 
 	// optional
-	String additive;
+	Token additive;
 	private SimpleExpression simpleExpression;
 
 	public Term getTerm() {
@@ -41,7 +43,7 @@ public class SimpleExpression extends Expression {
 	@Override
 	public String toString() {
 		if (additive != null) {
-			return additive + ":int";
+			return additive.getText() + ":int";
 		}
 		return "simpexpr";
 	}
