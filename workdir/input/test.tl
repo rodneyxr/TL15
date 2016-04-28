@@ -3,6 +3,7 @@ program
 	var X as int ;
 begin
 	FLAG := true ;
+	X := 1 ;
 	
 	if FLAG then
 		X := 1 ;

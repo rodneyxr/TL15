@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import core.ast.Program;
 import core.lexer.Lexer;
 import core.lexer.TokenStream;
 import core.parser.Parser;
+import core.parser.TypeChecker;
 import core.tools.Utils;
 
 public class Main {
@@ -40,13 +42,17 @@ public class Main {
 		TokenStream stream = new TokenStream(lexer);
 		Parser parser = new Parser(stream);
 
-		parser.parse();
+		Program ast = parser.parse();
 		System.out.println("Compiled Successfully!");
 
 		String dot = Utils.generateDOT(parser.getAST());
 		String astFilePath = sourceFile.getAbsolutePath().replaceFirst("\\.tl$", ".ast.dot");
 		Utils.saveDOTToFile(dot, astFilePath);
 		System.out.println("AST DOT file written to: " + astFilePath);
+		
+		TypeChecker typeChecker = new TypeChecker();
+		typeChecker.visit(ast);
+		
 	}
 
 }

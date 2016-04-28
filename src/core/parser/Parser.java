@@ -3,7 +3,6 @@ package core.parser;
 import java.util.HashMap;
 import java.util.Stack;
 
-import core.ast.ASTNode;
 import core.ast.Assignment;
 import core.ast.Declaration;
 import core.ast.Declarations;
@@ -29,7 +28,7 @@ public class Parser {
 
 	public static HashMap<String, IdentifierType> symbolTable;
 	private TokenStream stream;
-	private ASTNode ast;
+	private Program ast;
 
 	// Special Nodes
 	private Declarations declarations;
@@ -39,14 +38,14 @@ public class Parser {
 		this.stream = stream;
 	}
 
-	public ASTNode getAST() {
+	public Program getAST() {
 		if (ast == null) {
 			parse();
 		}
 		return ast;
 	}
 
-	public void parse() {
+	public Program parse() {
 		symbolTable = new HashMap<>();
 		declarations = new Declarations();
 		statementStack = new Stack<>();
@@ -57,6 +56,7 @@ public class Parser {
 			System.err.println(e.getMessage());
 			System.exit(1);
 		}
+		return ast;
 	}
 
 	public Token token(TokenType type) throws Exception {
@@ -71,7 +71,7 @@ public class Parser {
 		}
 	}
 
-	public ASTNode program() throws Exception {
+	public Program program() throws Exception {
 		Token token = stream.token();
 		Program prog = null;
 		if (token.isType(TokenType.PROGRAM)) {

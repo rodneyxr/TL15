@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Declarations extends ASTNode {
 
-	private List<Declaration> declarations = new ArrayList<>();
+	public List<Declaration> declarations = new ArrayList<>();
 
 	public void addDeclaration(Declaration declaration) {
 		declarations.add(declaration);

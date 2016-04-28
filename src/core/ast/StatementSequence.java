@@ -5,7 +5,7 @@ import java.util.List;
 
 public class StatementSequence extends ASTNode {
 
-	private List<Statement> statements = new ArrayList<>();
+	public List<Statement> statements = new ArrayList<>();
 	
 	public void addStatement(Statement statement) {
 		statements.add(statement);

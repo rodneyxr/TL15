@@ -4,15 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class ASTNode {
-	
+import core.parser.Visitor;
+
+public abstract class ASTNode{
+
 	private static final AtomicInteger ID_GENERATOR = new AtomicInteger();
 
 	protected boolean visited = false; // used for graph traversal
 
 	private int id; // unique ID to be used when creating Graphviz DOT file
 	private ASTNode parent;
-	
+
 	public ASTNode() {
 		id = ID_GENERATOR.getAndIncrement();
 	}
@@ -88,33 +90,28 @@ public abstract class ASTNode {
 						SimpleExpression simpexpr = (SimpleExpression) parent;
 						simpexpr.setTerm(term.getFactor());
 					}
-				} 
-				else if (this instanceof SimpleExpression) {
+				} else if (this instanceof SimpleExpression) {
 					SimpleExpression simple = (SimpleExpression) this;
 					if (parent instanceof SimpleExpression) {
 						SimpleExpression parentSimple = (SimpleExpression) parent;
 						parentSimple.setSimpleExpression(simple.getTerm().getFactor());
-					}
-					else if (parent instanceof Expression) {
+					} else if (parent instanceof Expression) {
 						Expression parentExpr = (Expression) parent;
 						Term term = simple.getTerm();
 						if (term.getChildren().size() > 1)
 							parentExpr.setLeft(simple.getTerm());
 						else
 							parentExpr.setLeft(simple.getTerm().getFactor());
-					}
-					else if (parent instanceof Statement) {
+					} else if (parent instanceof Statement) {
 						Statement parentStat = (Statement) parent;
 						parentStat.setExpression(simple.getTerm().getFactor());
 					}
-				}
-				else if (this instanceof Expression) {
+				} else if (this instanceof Expression) {
 					Expression expr = (Expression) this;
 					if (parent instanceof Expression) {
 						Expression parentExpr = (Expression) parent;
 						parentExpr.setRight(expr.getLeft().getTerm().getFactor());
-					}
-					else if (parent instanceof Statement) {
+					} else if (parent instanceof Statement) {
 						Statement parentStat = (Statement) parent;
 						if (expr.getLeft().getTerm().getChildren().size() > 1)
 							parentStat.setExpression(expr.getLeft().getTerm());
@@ -128,6 +125,48 @@ public abstract class ASTNode {
 		parent = this;
 		for (ASTNode child : getChildren()) {
 			child.reduce();
+		}
+	}
+
+	public void accept(Visitor visitor) {
+		if (this instanceof Assignment)
+			visitor.visit((Assignment) this);
+		else if (this instanceof IfStatement)
+			visitor.visit((IfStatement) this);
+		else if (this instanceof Factor)
+			visitor.visit((Factor) this);
+		else if (this instanceof Declaration)
+			visitor.visit((Declaration) this);
+		else if (this instanceof Declarations)
+			visitor.visit((Declarations) this);
+		else if (this instanceof ElseClause)
+			visitor.visit((ElseClause) this);
+		else if (this instanceof Term)
+			visitor.visit((Term) this);
+		else if (this instanceof SimpleExpression)
+			visitor.visit((SimpleExpression) this);
+		else if (this instanceof Expression)
+			visitor.visit((Expression) this);
+		else if (this instanceof Identifier)
+			visitor.visit((Identifier) this);
+		else if (this instanceof Program)
+			visitor.visit((Program) this);
+		else if (this instanceof ReadInt)
+			visitor.visit((ReadInt) this);
+		else if (this instanceof WriteInt)
+			visitor.visit((WriteInt) this);
+		else if (this instanceof Statement)
+			visitor.visit((Statement) this);
+		else if (this instanceof StatementSequence)
+			visitor.visit((StatementSequence) this);
+		else
+			visitor.visit(this);
+	}
+	
+	public void visit(Visitor visitor) {
+		accept(visitor);
+		for (ASTNode child : getChildren()) {
+			child.visit(visitor);
 		}
 	}
 
