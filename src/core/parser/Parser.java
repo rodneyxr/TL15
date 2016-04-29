@@ -1,6 +1,6 @@
 package core.parser;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Stack;
 
 import core.ast.Assignment;
@@ -26,7 +26,6 @@ import core.lexer.TokenType;
 
 public class Parser {
 
-	public static HashMap<String, IdentifierType> symbolTable;
 	private TokenStream stream;
 	private Program ast;
 
@@ -46,12 +45,12 @@ public class Parser {
 	}
 
 	public Program parse() {
-		symbolTable = new HashMap<>();
 		declarations = new Declarations();
 		statementStack = new Stack<>();
 		try {
 			ast = program();
 			ast.reduce();
+			Collections.reverse(declarations.declarations);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 			System.exit(1);
@@ -101,7 +100,7 @@ public class Parser {
 		token(TokenType.VAR);
 		declaration.setIdent(ident());
 		token(TokenType.AS);
-		Parser.symbolTable.put(declaration.getIdent().getVarName(), type());
+		declaration.setIdentType(type());
 		token(TokenType.SC);
 		declarations();
 		return declaration;

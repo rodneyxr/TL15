@@ -8,7 +8,8 @@ import core.ast.Program;
 import core.lexer.Lexer;
 import core.lexer.TokenStream;
 import core.parser.Parser;
-import core.parser.TypeChecker;
+import core.parser.SymbolVisitor;
+import core.parser.TypeVisitor;
 import core.tools.Utils;
 
 public class Main {
@@ -43,15 +44,18 @@ public class Main {
 		Parser parser = new Parser(stream);
 
 		Program ast = parser.parse();
+
+		SymbolVisitor typeChecker = new SymbolVisitor();
+		typeChecker.visit(ast);
+		TypeVisitor typeVisitor = new TypeVisitor(typeChecker.getSymbolTable());
+		typeVisitor.visit(ast);
+		
 		System.out.println("Compiled Successfully!");
 
 		String dot = Utils.generateDOT(parser.getAST());
 		String astFilePath = sourceFile.getAbsolutePath().replaceFirst("\\.tl$", ".ast.dot");
 		Utils.saveDOTToFile(dot, astFilePath);
 		System.out.println("AST DOT file written to: " + astFilePath);
-		
-		TypeChecker typeChecker = new TypeChecker();
-		typeChecker.visit(ast);
 		
 	}
 

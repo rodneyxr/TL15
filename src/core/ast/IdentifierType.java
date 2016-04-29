@@ -1,7 +1,7 @@
 package core.ast;
 
 public enum IdentifierType {
-	BOOL("bool"), INT("int");
+	BOOL("bool"), INT("int"), VOID("void");
 
 	String str;
 

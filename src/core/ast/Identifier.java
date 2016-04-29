@@ -3,15 +3,9 @@ package core.ast;
 import java.util.ArrayList;
 import java.util.List;
 
-import core.parser.Parser;
-
 public class Identifier extends ASTNode {
 
 	private String varName;
-
-	public IdentifierType getType() {
-		return Parser.symbolTable.get(varName);
-	}
 	
 	public String getVarName() {
 		return varName;
@@ -29,7 +23,7 @@ public class Identifier extends ASTNode {
 
 	@Override
 	public String toString() {
-		return String.format("%s:%s", getVarName(), getType());
+		return String.format("%s:%s", getVarName(), type);
 	}
 
 }

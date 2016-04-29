@@ -6,9 +6,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import core.parser.Visitor;
 
-public abstract class ASTNode{
+public abstract class ASTNode {
 
 	private static final AtomicInteger ID_GENERATOR = new AtomicInteger();
+	
+	public IdentifierType type;
 
 	protected boolean visited = false; // used for graph traversal
 
@@ -163,11 +165,4 @@ public abstract class ASTNode{
 			visitor.visit(this);
 	}
 	
-	public void visit(Visitor visitor) {
-		accept(visitor);
-		for (ASTNode child : getChildren()) {
-			child.visit(visitor);
-		}
-	}
-
 }

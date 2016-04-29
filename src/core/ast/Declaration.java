@@ -6,7 +6,8 @@ import java.util.List;
 public class Declaration extends ASTNode {
 
 	private Identifier ident;
-
+	private IdentifierType identType;
+	
 	public Identifier getIdent() {
 		return ident;
 	}
@@ -16,6 +17,14 @@ public class Declaration extends ASTNode {
 		ident.setParent(this);
 	}
 
+	public IdentifierType getIdentType() {
+		return identType;
+	}
+
+	public void setIdentType(IdentifierType identType) {
+		this.identType = identType;
+	}
+	
 	@Override
 	public List<ASTNode> getChildren() {
 		List<ASTNode> children = new ArrayList<>();
@@ -24,7 +33,7 @@ public class Declaration extends ASTNode {
 
 	@Override
 	public String toString() {
-		return String.format("decl:'%s':%s", ident.getVarName(), ident.getType());
+		return String.format("decl:'%s':%s", ident.getVarName(), type);
 	}
 
 }

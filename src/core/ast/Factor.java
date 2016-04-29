@@ -58,9 +58,9 @@ public class Factor extends Term {
 		if (getIdent() != null)
 			return getIdent().toString();
 		if (getNum() != null)
-			return getNum().getText() + ":int";
+			return getNum().getText() + ":" + type;
 		if (getBoollit() != null)
-			return getBoollit().getText() + ":int";
+			return getBoollit().getText() + ":" + type;
 		return "factor";
 	}
 

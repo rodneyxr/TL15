@@ -21,7 +21,7 @@ public class Declarations extends ASTNode {
 
 	@Override
 	public String toString() {
-		return "decl list";
+		return "decl list:" + type;
 	}
 
 }
