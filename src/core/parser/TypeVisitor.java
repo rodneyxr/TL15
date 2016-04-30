@@ -168,6 +168,8 @@ public class TypeVisitor extends BaseVisitor {
 			// System.exit(1);
 		}
 		if (whileStatement.getStatements().type.equals(IdentifierType.VOID)) {
+			whileStatement.type = IdentifierType.VOID;
+		} else {
 			System.err.println("TYPE ERROR: whileStatement(1)");
 			typeError(whileStatement);
 			// System.exit(1);

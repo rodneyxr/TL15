@@ -158,6 +158,8 @@ public abstract class ASTNode {
 			visitor.visit((ReadInt) this);
 		else if (this instanceof WriteInt)
 			visitor.visit((WriteInt) this);
+		else if (this instanceof WhileStatement)
+			visitor.visit((WhileStatement) this);
 		else if (this instanceof Statement)
 			visitor.visit((Statement) this);
 		else if (this instanceof StatementSequence)
