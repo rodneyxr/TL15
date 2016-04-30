@@ -2,6 +2,7 @@ package core.parser;
 
 import java.util.HashMap;
 
+import core.ast.ASTNode;
 import core.ast.Assignment;
 import core.ast.Declaration;
 import core.ast.Declarations;
@@ -23,9 +24,19 @@ import core.ast.WriteInt;
 public class TypeVisitor extends BaseVisitor {
 
 	HashMap<String, Symbol> table;
+	boolean typeError;
 
 	public TypeVisitor(HashMap<String, Symbol> symbolTable) {
 		this.table = symbolTable;
+	}
+
+	private void typeError(ASTNode node) {
+		node.typeError = true;
+		typeError = true;
+	}
+
+	public boolean hasTypeError() {
+		return typeError;
 	}
 
 	@Override
@@ -37,7 +48,8 @@ public class TypeVisitor extends BaseVisitor {
 			program.type = IdentifierType.VOID;
 		} else {
 			System.err.println("TYPE ERROR: program");
-			System.exit(1);
+			typeError(program);
+			// System.exit(1);
 		}
 	}
 
@@ -63,7 +75,8 @@ public class TypeVisitor extends BaseVisitor {
 			declaration.type = type;
 		} else {
 			System.err.println("TYPE ERROR: declaration");
-			System.exit(1);
+			typeError(declaration);
+			// System.exit(1);
 		}
 	}
 
@@ -72,7 +85,8 @@ public class TypeVisitor extends BaseVisitor {
 		Symbol symbol = table.get(ident.getVarName());
 		if (symbol == null) {
 			System.err.println("TYPE ERROR: undefined variable");
-			System.exit(1);
+			typeError(ident);
+			// System.exit(1);
 		} else {
 			ident.type = symbol.type;
 		}
@@ -103,7 +117,8 @@ public class TypeVisitor extends BaseVisitor {
 			else
 				errMsg.append(assignment.getReadInt());
 			System.err.println(errMsg);
-			System.exit(1);
+			typeError(assignment);
+			// System.exit(1);
 		} else {
 			assignment.type = IdentifierType.VOID;
 		}
@@ -117,11 +132,13 @@ public class TypeVisitor extends BaseVisitor {
 		IdentifierType exprType = ifStatement.getExpression().type;
 		if (!(exprType.equals(IdentifierType.INT) || exprType.equals(IdentifierType.BOOL))) {
 			System.err.println("TYPE ERROR: ifStatement(0)");
-			System.exit(1);
+			typeError(ifStatement);
+			// System.exit(1);
 		}
 		if (!ifStatement.getStatements().type.equals(IdentifierType.VOID)) {
 			System.err.println("TYPE ERROR: ifStatement(1) ");
-			System.exit(1);
+			typeError(ifStatement);
+			// System.exit(1);
 		}
 
 		ElseClause elseClause = ifStatement.getElseClause();
@@ -131,7 +148,8 @@ public class TypeVisitor extends BaseVisitor {
 				ifStatement.type = IdentifierType.VOID;
 			} else {
 				System.err.println("TYPE ERROR: ifStatement(2)");
-				System.exit(1);
+				typeError(ifStatement);
+				// System.exit(1);
 			}
 		} else {
 			ifStatement.type = IdentifierType.VOID;
@@ -146,11 +164,13 @@ public class TypeVisitor extends BaseVisitor {
 		IdentifierType exprType = whileStatement.getExpression().type;
 		if (!(exprType.equals(IdentifierType.INT) || exprType.equals(IdentifierType.BOOL))) {
 			System.err.println("TYPE ERROR: whileStatement(0)");
-			System.exit(1);
+			typeError(whileStatement);
+			// System.exit(1);
 		}
 		if (whileStatement.getStatements().type.equals(IdentifierType.VOID)) {
 			System.err.println("TYPE ERROR: whileStatement(1)");
-			System.exit(1);
+			typeError(whileStatement);
+			// System.exit(1);
 		}
 	}
 
@@ -162,7 +182,8 @@ public class TypeVisitor extends BaseVisitor {
 			writeInt.type = IdentifierType.VOID;
 		} else {
 			System.err.println("TYPE ERROR: writeInt");
-			System.exit(1);
+			typeError(writeInt);
+			// System.exit(1);
 		}
 	}
 
@@ -178,7 +199,8 @@ public class TypeVisitor extends BaseVisitor {
 			elseClause.type = IdentifierType.VOID;
 		} else {
 			System.err.println("TYPE ERROR: elseClause");
-			System.exit(1);
+			typeError(elseClause);
+			// System.exit(1);
 		}
 	}
 
@@ -204,7 +226,8 @@ public class TypeVisitor extends BaseVisitor {
 					errMsg.append(expression.getRight());
 				}
 				System.err.println(errMsg);
-				System.exit(1);
+				typeError(expression);
+				// System.exit(1);
 			}
 		} else {
 			// TODO: implement this
@@ -226,7 +249,8 @@ public class TypeVisitor extends BaseVisitor {
 				simpleExpression.type = IdentifierType.INT;
 			} else {
 				System.err.println("TYPE ERROR: simpleExpression");
-				System.exit(1);
+				typeError(simpleExpression);
+				// System.exit(1);
 			}
 		} else {
 			// TODO: implement this
@@ -249,7 +273,8 @@ public class TypeVisitor extends BaseVisitor {
 				term.type = IdentifierType.INT;
 			} else {
 				System.err.println("TYPE ERROR: term");
-				System.exit(1);
+				typeError(term);
+				// System.exit(1);
 			}
 		} else {
 			// TODO: implement this
@@ -266,7 +291,8 @@ public class TypeVisitor extends BaseVisitor {
 				factor.type = identifier.type;
 			} else {
 				System.err.println("TYPE ERROR: factor(0)");
-				System.exit(1);
+				typeError(factor);
+				// System.exit(1);
 			}
 			return;
 		}
@@ -291,7 +317,8 @@ public class TypeVisitor extends BaseVisitor {
 				factor.type = expression.type;
 			} else {
 				System.err.println("TYPE ERROR: factor(1)");
-				System.exit(1);
+				typeError(factor);
+				// System.exit(1);
 			}
 		}
 	}

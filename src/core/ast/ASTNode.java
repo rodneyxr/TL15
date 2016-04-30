@@ -11,6 +11,7 @@ public abstract class ASTNode {
 	private static final AtomicInteger ID_GENERATOR = new AtomicInteger();
 	
 	public IdentifierType type;
+	public boolean typeError;
 
 	protected boolean visited = false; // used for graph traversal
 

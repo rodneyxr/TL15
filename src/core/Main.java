@@ -48,15 +48,22 @@ public class Main {
 		SymbolVisitor typeChecker = new SymbolVisitor();
 		typeChecker.visit(ast);
 		TypeVisitor typeVisitor = new TypeVisitor(typeChecker.getSymbolTable());
-		typeVisitor.visit(ast);
-		
-		System.out.println("Compiled Successfully!");
+		try {
+			typeVisitor.visit(ast);
+		} catch (NullPointerException npe) {
+		}
+
+		if (typeVisitor.hasTypeError()) {
+			System.out.println("Program had errors.");
+		} else {
+			System.out.println("Compiled Successfully!");
+		}
 
 		String dot = Utils.generateDOT(parser.getAST());
 		String astFilePath = sourceFile.getAbsolutePath().replaceFirst("\\.tl$", ".ast.dot");
 		Utils.saveDOTToFile(dot, astFilePath);
 		System.out.println("AST DOT file written to: " + astFilePath);
-		
+
 	}
 
 }

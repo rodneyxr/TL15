@@ -39,6 +39,7 @@ public class Utils {
 		ArrayList<ASTNode> nodes = root.getAllNodes();
 
 		StringBuilder dot = new StringBuilder("digraph G {\n");
+		dot.append("    node[shape=box,style=filled,fillcolor=\"white\"];\n");
 
 		// first define all nodes
 		for (ASTNode node : nodes) {
@@ -49,6 +50,8 @@ public class Utils {
 			dot.append("\"");
 
 			dot.append(",shape=box");
+			if (node.typeError)
+				dot.append(",fillcolor=\"/pastel13/1\"");
 			
 			dot.append("];\n");
 		}
