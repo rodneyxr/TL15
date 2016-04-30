@@ -49,7 +49,7 @@ public class Utils {
 			dot.append("\"");
 
 			dot.append(",shape=box");
-
+			
 			dot.append("];\n");
 		}
 

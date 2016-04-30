@@ -51,7 +51,7 @@ public class SimpleExpression extends Expression {
 	@Override
 	public String toString() {
 		if (getAdditive() != null) {
-			return getAdditive().getText() + ":int";
+			return getAdditive().getText() + ":" + type;
 		}
 		return "simpexpr";
 	}

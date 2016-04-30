@@ -36,7 +36,7 @@ public class Program extends ASTNode {
 
 	@Override
 	public String toString() {
-		return "program:" + type;
+		return "program";
 	}
 
 }

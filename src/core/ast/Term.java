@@ -49,7 +49,7 @@ public class Term extends SimpleExpression {
 	@Override
 	public String toString() {
 		if (getMultiplicative() != null) {
-			return getMultiplicative() + ":int";
+			return getMultiplicative() + ":" + type;
 		}
 		return "term";
 	}

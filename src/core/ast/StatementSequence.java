@@ -21,7 +21,7 @@ public class StatementSequence extends ASTNode {
 
 	@Override
 	public String toString() {
-		return "stmt list:" + type;
+		return "stmt list";
 	}
 
 }

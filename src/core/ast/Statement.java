@@ -2,7 +2,7 @@ package core.ast;
 
 public abstract class Statement extends ASTNode {
 
-	StatementType type;
+	StatementType statementType;
 	private Expression expression;
 
 	public Expression getExpression() {
@@ -14,12 +14,12 @@ public abstract class Statement extends ASTNode {
 		expression.setParent(this);
 	}
 
-	public Statement(StatementType type) {
-		this.type = type;
+	public Statement(StatementType statementType) {
+		this.statementType = statementType;
 	}
 
 	@Override
 	public String toString() {
-		return type.str;
+		return statementType.str;
 	}
 }

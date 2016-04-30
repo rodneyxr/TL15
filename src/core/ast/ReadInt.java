@@ -13,7 +13,7 @@ public class ReadInt extends ASTNode {
 
 	@Override
 	public String toString() {
-		return "readint:int";
+		return "readint:" + type;
 	}
 
 }

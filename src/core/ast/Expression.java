@@ -51,7 +51,7 @@ public class Expression extends ASTNode {
 	@Override
 	public String toString() {
 		if (getCompare() != null)
-			return getCompare().getText() + ":bool";
+			return getCompare().getText() + ":" + type;
 		return "expression";
 	}
 

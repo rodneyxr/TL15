@@ -80,82 +80,219 @@ public class TypeVisitor extends BaseVisitor {
 
 	@Override
 	public void visit(Assignment assignment) {
-		// TODO: continue here
+		IdentifierType leftType;
+		IdentifierType rightType;
+
 		assignment.getIdentifier().accept(this);
+		leftType = assignment.getIdentifier().type;
 		Expression expression = assignment.getExpression();
-		if (expression != null)
+		if (expression != null) {
 			expression.accept(this);
-		else
+			rightType = expression.type;
+		} else {
 			assignment.getReadInt().accept(this);
+			rightType = assignment.getReadInt().type;
+		}
+
+		if (leftType != rightType) {
+			StringBuilder errMsg = new StringBuilder("TYPE ERROR: assignment -> ");
+			errMsg.append(assignment.getIdentifier());
+			errMsg.append(" " + assignment + " ");
+			if (expression != null)
+				errMsg.append(expression);
+			else
+				errMsg.append(assignment.getReadInt());
+			System.err.println(errMsg);
+			System.exit(1);
+		} else {
+			assignment.type = IdentifierType.VOID;
+		}
 	}
 
 	@Override
 	public void visit(IfStatement ifStatement) {
 		ifStatement.getExpression().accept(this);
 		ifStatement.getStatements().accept(this);
+
+		IdentifierType exprType = ifStatement.getExpression().type;
+		if (!(exprType.equals(IdentifierType.INT) || exprType.equals(IdentifierType.BOOL))) {
+			System.err.println("TYPE ERROR: ifStatement(0)");
+			System.exit(1);
+		}
+		if (!ifStatement.getStatements().type.equals(IdentifierType.VOID)) {
+			System.err.println("TYPE ERROR: ifStatement(1) ");
+			System.exit(1);
+		}
+
 		ElseClause elseClause = ifStatement.getElseClause();
-		if (elseClause != null)
+		if (elseClause != null) {
 			elseClause.accept(this);
+			if (elseClause.type.equals(IdentifierType.VOID)) {
+				ifStatement.type = IdentifierType.VOID;
+			} else {
+				System.err.println("TYPE ERROR: ifStatement(2)");
+				System.exit(1);
+			}
+		} else {
+			ifStatement.type = IdentifierType.VOID;
+		}
 	}
 
 	@Override
 	public void visit(WhileStatement whileStatement) {
 		whileStatement.getExpression().accept(this);
 		whileStatement.getStatements().accept(this);
+
+		IdentifierType exprType = whileStatement.getExpression().type;
+		if (!(exprType.equals(IdentifierType.INT) || exprType.equals(IdentifierType.BOOL))) {
+			System.err.println("TYPE ERROR: whileStatement(0)");
+			System.exit(1);
+		}
+		if (whileStatement.getStatements().type.equals(IdentifierType.VOID)) {
+			System.err.println("TYPE ERROR: whileStatement(1)");
+			System.exit(1);
+		}
 	}
 
 	@Override
 	public void visit(WriteInt writeInt) {
 		writeInt.getExpression().accept(this);
+		IdentifierType exprType = writeInt.getExpression().type;
+		if (exprType.equals(IdentifierType.INT)) {
+			writeInt.type = IdentifierType.VOID;
+		} else {
+			System.err.println("TYPE ERROR: writeInt");
+			System.exit(1);
+		}
 	}
 
 	@Override
 	public void visit(ReadInt readInt) {
-		return;
+		readInt.type = IdentifierType.INT;
 	}
 
 	@Override
 	public void visit(ElseClause elseClause) {
 		elseClause.getStatements().accept(this);
+		if (elseClause.getStatements().type.equals(IdentifierType.VOID)) {
+			elseClause.type = IdentifierType.VOID;
+		} else {
+			System.err.println("TYPE ERROR: elseClause");
+			System.exit(1);
+		}
 	}
 
 	@Override
 	public void visit(Expression expression) {
+		IdentifierType leftType;
+		IdentifierType rightType;
+
 		expression.getLeft().accept(this);
+		leftType = expression.getLeft().type;
+
 		Expression right = expression.getRight();
 		if (right != null) {
 			right.accept(this);
+			rightType = right.type;
+			if (leftType.equals(IdentifierType.INT) && rightType.equals(IdentifierType.INT)) {
+				expression.type = IdentifierType.BOOL;
+			} else {
+				StringBuilder errMsg = new StringBuilder("TYPE ERROR: expression -> ");
+				errMsg.append(expression.getLeft());
+				if (right != null) {
+					errMsg.append(" " + expression + " ");
+					errMsg.append(expression.getRight());
+				}
+				System.err.println(errMsg);
+				System.exit(1);
+			}
+		} else {
+			// TODO: implement this
 		}
 	}
 
 	@Override
 	public void visit(SimpleExpression simpleExpression) {
+		IdentifierType leftType;
+		IdentifierType rightType;
+
 		simpleExpression.getTerm().accept(this);
+		leftType = simpleExpression.getTerm().type;
 		SimpleExpression right = simpleExpression.getSimpleExpression();
 		if (right != null) {
 			right.accept(this);
+			rightType = right.type;
+			if (leftType.equals(IdentifierType.INT) && rightType.equals(IdentifierType.INT)) {
+				simpleExpression.type = IdentifierType.INT;
+			} else {
+				System.err.println("TYPE ERROR: simpleExpression");
+				System.exit(1);
+			}
+		} else {
+			// TODO: implement this
 		}
 	}
 
 	@Override
 	public void visit(Term term) {
+		IdentifierType leftType;
+		IdentifierType rightType;
+
 		term.getFactor().accept(this);
+		leftType = term.getFactor().type;
+
 		Term right = term.getTerm();
 		if (right != null) {
 			right.accept(this);
+			rightType = right.type;
+			if (leftType.equals(IdentifierType.INT) && rightType.equals(IdentifierType.INT)) {
+				term.type = IdentifierType.INT;
+			} else {
+				System.err.println("TYPE ERROR: term");
+				System.exit(1);
+			}
+		} else {
+			// TODO: implement this
 		}
 	}
 
 	@Override
 	public void visit(Factor factor) {
+		// ident
 		Identifier identifier = factor.getIdent();
 		if (identifier != null) {
 			identifier.accept(this);
+			if (!identifier.type.equals(IdentifierType.VOID)) {
+				factor.type = identifier.type;
+			} else {
+				System.err.println("TYPE ERROR: factor(0)");
+				System.exit(1);
+			}
 			return;
 		}
+
+		// num
+		if (factor.getNum() != null) {
+			factor.type = IdentifierType.INT;
+			return;
+		}
+
+		// bool
+		if (factor.getBoollit() != null) {
+			factor.type = IdentifierType.BOOL;
+			return;
+		}
+
+		// LP <expression> RP
 		Expression expression = factor.getExpression();
 		if (expression != null) {
 			expression.accept(this);
+			if (!expression.type.equals(IdentifierType.VOID)) {
+				factor.type = expression.type;
+			} else {
+				System.err.println("TYPE ERROR: factor(1)");
+				System.exit(1);
+			}
 		}
 	}
 

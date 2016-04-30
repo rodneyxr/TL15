@@ -52,6 +52,10 @@ public class Parser {
 			ast.reduce();
 			Collections.reverse(declarations.declarations);
 		} catch (Exception e) {
+			if (e.getMessage() == null) {
+				System.err.println("PARSER ERROR");
+				System.exit(1);
+			}
 			System.err.println(e.getMessage());
 			System.exit(1);
 		}

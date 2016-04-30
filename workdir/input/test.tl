@@ -3,7 +3,7 @@ program
 	var X as int ;
 begin
 	FLAG := true ;
-	X := 0 ;
+	X := readint ;
 	
 	if FLAG then
 		X := 1 ;
