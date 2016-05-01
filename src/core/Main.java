@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import core.ast.Program;
+import core.code.CodeVisitor;
 import core.lexer.Lexer;
 import core.lexer.TokenStream;
 import core.parser.Parser;
@@ -53,16 +54,23 @@ public class Main {
 		} catch (NullPointerException npe) {
 		}
 
+		String dot = Utils.generateDOT(parser.getAST());
+		String astFilePath = sourceFile.getAbsolutePath().replaceFirst("\\.tl$", ".ast.dot");
+		Utils.saveDOTToFile(dot, astFilePath);
+		System.out.println("AST DOT file written to: " + astFilePath);
+
 		if (typeVisitor.hasTypeError()) {
 			System.out.println("Program had errors.");
 		} else {
 			System.out.println("Compiled Successfully!");
 		}
 
-		String dot = Utils.generateDOT(parser.getAST());
-		String astFilePath = sourceFile.getAbsolutePath().replaceFirst("\\.tl$", ".ast.dot");
-		Utils.saveDOTToFile(dot, astFilePath);
-		System.out.println("AST DOT file written to: " + astFilePath);
+		// FIXME: Handle notification of error or success
+		System.out.println();
+		CodeVisitor codeVisitor = new CodeVisitor(typeChecker.getSymbolTable());
+		codeVisitor.visit(ast);
+		
+		System.out.println(codeVisitor.getCode());
 
 	}
 
