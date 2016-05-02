@@ -76,6 +76,7 @@ public class Main {
 			return;
 		}
 
+		// generate the MIPS assembly code
 		try {
 			codeVisitor = new CodeVisitor(symbolVisitor.getSymbolTable());
 			codeVisitor.visit(ast);
@@ -84,7 +85,7 @@ public class Main {
 
 			System.out.println("Compiled Successfully!");
 		} catch (ParserException e) {
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 	}

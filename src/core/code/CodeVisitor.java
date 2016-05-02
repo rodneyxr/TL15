@@ -24,6 +24,9 @@ public class CodeVisitor extends BaseVisitor {
 	HashMap<String, Symbol> table;
 	String code = "";
 
+	private static final Register $t0 = new Register("$t0");
+	private static final Register $v0 = new Register("$v0");
+
 	public CodeVisitor(HashMap<String, Symbol> symbolTable) {
 		this.table = symbolTable;
 	}
@@ -54,17 +57,15 @@ public class CodeVisitor extends BaseVisitor {
 		emit("    # exit");
 		emit("    li $v0, 10");
 		emit("    syscall");
-		emit("");
 	}
 
 	@Override
 	public void visit(Declaration declaration) throws ParserException {
 		declaration.getIdent().accept(this);
-		Register r1 = new Register("$t0");
-		Register r2 = declaration.getIdent().reg;
+		Register r1 = declaration.getIdent().reg;
 		emit("    # loadI 0 => r_" + declaration.getIdent().getVarName());
-		emit(new Instruction("li", r1, 0));
-		emit(new Instruction("sw", r1, r2));
+		emit(new Instruction("li", $t0, 0));
+		emit(new Instruction("sw", $t0, r1));
 		emit("");
 	}
 
@@ -80,13 +81,24 @@ public class CodeVisitor extends BaseVisitor {
 
 	@Override
 	public void visit(Assignment assignment) throws ParserException {
-		// TODO: start here
 		assignment.getIdentifier().accept(this);
 		Expression expression = assignment.getExpression();
-		if (expression != null)
+		emit("    # assignment: " + assignment.getIdentifier().getVarName());
+		Register var = assignment.getIdentifier().reg;
+		Register res;
+		if (expression != null) {
 			expression.accept(this);
-		else
+			res = expression.reg;
+			emit(new Instruction("li", $t0, res));
+		} else {
+			emit("    # readInt => r_" + assignment.getIdentifier().getVarName());
 			assignment.getReadInt().accept(this);
+			res = $v0;
+			emit(new Instruction("move", $t0, res));
+		}
+
+		emit(new Instruction("sw", $t0, var));
+		emit("");
 	}
 
 	@Override
@@ -96,27 +108,32 @@ public class CodeVisitor extends BaseVisitor {
 		ElseClause elseClause = ifStatement.getElseClause();
 		if (elseClause != null)
 			elseClause.accept(this);
+		throw new ParserException("Not Implemented");
 	}
 
 	@Override
 	public void visit(WhileStatement whileStatement) throws ParserException {
 		whileStatement.getExpression().accept(this);
 		whileStatement.getStatements().accept(this);
+		throw new ParserException("Not Implemented");
 	}
 
 	@Override
 	public void visit(WriteInt writeInt) throws ParserException {
 		writeInt.getExpression().accept(this);
+		throw new ParserException("Not Implemented");
 	}
 
 	@Override
 	public void visit(ReadInt readInt) throws ParserException {
-		return;
+		emit(new Instruction("li", $v0, 5));
+		emit(new Instruction("syscall"));
 	}
 
 	@Override
 	public void visit(ElseClause elseClause) throws ParserException {
 		elseClause.getStatements().accept(this);
+		throw new ParserException("Not Implemented");
 	}
 
 	@Override
@@ -126,6 +143,7 @@ public class CodeVisitor extends BaseVisitor {
 		if (right != null) {
 			right.accept(this);
 		}
+		throw new ParserException("Not Implemented");
 	}
 
 	@Override
@@ -135,6 +153,7 @@ public class CodeVisitor extends BaseVisitor {
 		if (right != null) {
 			right.accept(this);
 		}
+		throw new ParserException("Not Implemented");
 	}
 
 	@Override
@@ -144,6 +163,7 @@ public class CodeVisitor extends BaseVisitor {
 		if (right != null) {
 			right.accept(this);
 		}
+		throw new ParserException("Not Implemented");
 	}
 
 	@Override
@@ -157,6 +177,7 @@ public class CodeVisitor extends BaseVisitor {
 		if (expression != null) {
 			expression.accept(this);
 		}
+		throw new ParserException("Not Implemented");
 	}
 
 }
