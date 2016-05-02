@@ -70,20 +70,19 @@ public class Main {
 		String astFilePath = sourceFile.getAbsolutePath().replaceFirst("\\.tl$", ".ast.dot");
 		Utils.saveDOTToFile(dot, astFilePath);
 		System.out.println("AST DOT file written to: " + astFilePath);
-		
+
 		if (typeVisitor.hasTypeError()) {
 			System.out.println("Program had errors.");
 			return;
-		} else {
-			System.out.println("Compiled Successfully!");
 		}
 
-		// FIXME: Handle notification of error or success
-		System.out.println();
 		try {
 			codeVisitor = new CodeVisitor(symbolVisitor.getSymbolTable());
 			codeVisitor.visit(ast);
-			System.out.println(codeVisitor.getCode());
+			String mipsFilePath = Utils.writeCodeToFile(sourceFile, codeVisitor.getCode());
+			System.out.println("MIPS Assembly file written to: " + mipsFilePath);
+
+			System.out.println("Compiled Successfully!");
 		} catch (ParserException e) {
 			System.err.println(e.getMessage());
 		}

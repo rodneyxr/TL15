@@ -5,3 +5,4 @@ bin/
 # ignore these files
 *.tok
 *.dot
+*.s

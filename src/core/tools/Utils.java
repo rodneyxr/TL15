@@ -22,8 +22,21 @@ public class Utils {
 		}
 	}
 
-	public static String changeTinyExtention(File sourceFile, String extention) {
-		return sourceFile.getAbsolutePath().replaceAll("\\.tl$", extention);
+	public static String writeCodeToFile(File sourceFile, String code) {
+		File file = Utils.changeTinyExt(sourceFile, ".s");
+		try {
+			PrintWriter w = new PrintWriter(file);
+			w.print(code);
+			w.close();
+		} catch (FileNotFoundException e) {
+			System.err.println("Error writing to file: " + file.getAbsolutePath());
+			System.exit(1);
+		}
+		return file.getAbsolutePath();
+	}
+
+	public static File changeTinyExt(File sourceFile, String extention) {
+		return new File(sourceFile.getAbsolutePath().replaceAll("\\.tl$", extention));
 	}
 
 	// Example:
