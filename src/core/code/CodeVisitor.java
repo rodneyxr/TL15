@@ -15,6 +15,7 @@ import core.ast.SimpleExpression;
 import core.ast.Term;
 import core.ast.WhileStatement;
 import core.ast.WriteInt;
+import core.lexer.Lexer;
 import core.lexer.Token;
 import core.parser.BaseVisitor;
 import core.parser.ParserException;
@@ -174,17 +175,36 @@ public class CodeVisitor extends BaseVisitor {
 		Term right = term.getTerm();
 
 		if (right != null) {
-			// multiply
 			right.accept(this);
 			Register res = Register.next();
 			term.reg = res;
 			Register r1 = term.getFactor().reg;
 			Register r2 = right.reg;
-			emit("    # multiply");
-			emit(new Instruction("lw", $t1, r1));
-			emit(new Instruction("lw", $t2, r2));
-			emit(new Instruction("mul", $t0, $t1, $t2));
-			emit(new Instruction("sw", $t0, res));
+			switch (term.getMultiplicative()) {
+			case Lexer.MULT:
+				emit("    # multiply");
+				emit(new Instruction("lw", $t1, r1));
+				emit(new Instruction("lw", $t2, r2));
+				emit(new Instruction("mul", $t0, $t1, $t2));
+				emit(new Instruction("sw", $t0, res));
+				break;
+			case Lexer.DIV:
+				emit("    # divide");
+				emit(new Instruction("lw", $t1, r1));
+				emit(new Instruction("lw", $t2, r2));
+				emit(new Instruction("div", $t0, $t1, $t2));
+				emit(new Instruction("sw", $t0, res));
+				break;
+			case Lexer.MOD:
+				emit("    # modulus");
+				emit(new Instruction("lw", $t1, r1));
+				emit(new Instruction("lw", $t2, r2));
+				emit(new Instruction("div", $t0, $t1, $t2));
+				emit(new Instruction("mul", $t0, $t0, $t2));
+				emit(new Instruction("sub", $t0, $t1, $t0));
+				emit(new Instruction("sw", $t0, res));
+				break;
+			}
 			emit("");
 		} else {
 			term.reg = term.getFactor().reg;

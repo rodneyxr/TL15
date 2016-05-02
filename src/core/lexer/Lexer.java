@@ -5,6 +5,23 @@ import java.util.Scanner;
 
 public class Lexer {
 
+	// Multiplicative
+	public static final String MULT = "*";
+	public static final String DIV = "div";
+	public static final String MOD = "mod";
+
+	// Additive
+	public static final String ADD = "+";
+	public static final String SUB = "-";
+
+	// Compare
+	public static final String EQ = "=";
+	public static final String NE = "!=";
+	public static final String LT = "<";
+	public static final String GT = ">";
+	public static final String LE = "<=";
+	public static final String GE = ">=";
+
 	public static final HashMap<String, TokenType> SYMBOLS;
 
 	static {
@@ -160,7 +177,7 @@ public class Lexer {
 		Token token = null;
 		if (lexeme.matches("[1-9][0-9]*|0")) {
 			try {
-			Integer.valueOf(lexeme);
+				Integer.valueOf(lexeme);
 			} catch (NumberFormatException e) {
 				System.err.println("SCANNER ERROR: Number too large -> " + lexeme);
 				System.exit(1);
