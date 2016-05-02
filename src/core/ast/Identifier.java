@@ -3,13 +3,10 @@ package core.ast;
 import java.util.ArrayList;
 import java.util.List;
 
-import core.code.Register;
-
 public class Identifier extends ASTNode {
 
 	private String varName;
-	public Register reg;
-	
+
 	public String getVarName() {
 		return varName;
 	}

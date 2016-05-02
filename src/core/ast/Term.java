@@ -6,11 +6,11 @@ import java.util.List;
 public class Term extends SimpleExpression {
 
 	private Factor factor;
-	
+
 	// optional
 	private String multiplicative;
 	private Term term;
-	
+
 	public Factor getFactor() {
 		return factor;
 	}
@@ -36,7 +36,7 @@ public class Term extends SimpleExpression {
 	public void setMultiplicative(String multiplicative) {
 		this.multiplicative = multiplicative;
 	}
-	
+
 	@Override
 	public List<ASTNode> getChildren() {
 		List<ASTNode> children = new ArrayList<>();

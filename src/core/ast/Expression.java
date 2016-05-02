@@ -3,7 +3,6 @@ package core.ast;
 import java.util.ArrayList;
 import java.util.List;
 
-import core.code.Register;
 import core.lexer.Token;
 
 public class Expression extends ASTNode {
@@ -13,8 +12,6 @@ public class Expression extends ASTNode {
 	// optional
 	private Expression right;
 	private Token compare;
-	
-	public Register reg;
 
 	public SimpleExpression getLeft() {
 		return left;
@@ -33,7 +30,7 @@ public class Expression extends ASTNode {
 		this.right = right;
 		right.setParent(this);
 	}
-	
+
 	public Token getCompare() {
 		return compare;
 	}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import core.code.Register;
 import core.parser.ParserException;
 import core.parser.Visitor;
 
@@ -13,6 +14,7 @@ public abstract class ASTNode {
 	
 	public IdentifierType type;
 	public boolean typeError;
+	public Register reg;
 
 	protected boolean visited = false; // used for graph traversal
 

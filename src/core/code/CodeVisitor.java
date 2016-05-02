@@ -15,6 +15,7 @@ import core.ast.SimpleExpression;
 import core.ast.Term;
 import core.ast.WhileStatement;
 import core.ast.WriteInt;
+import core.lexer.Token;
 import core.parser.BaseVisitor;
 import core.parser.ParserException;
 import core.parser.Symbol;
@@ -23,8 +24,12 @@ public class CodeVisitor extends BaseVisitor {
 
 	HashMap<String, Symbol> table;
 	String code = "";
+	int tempReg = 0;
 
+	private static final Register $a0 = new Register("$a0");
 	private static final Register $t0 = new Register("$t0");
+	private static final Register $t1 = new Register("$t1");
+	private static final Register $t2 = new Register("$t2");
 	private static final Register $v0 = new Register("$v0");
 
 	public CodeVisitor(HashMap<String, Symbol> symbolTable) {
@@ -83,7 +88,6 @@ public class CodeVisitor extends BaseVisitor {
 	public void visit(Assignment assignment) throws ParserException {
 		assignment.getIdentifier().accept(this);
 		Expression expression = assignment.getExpression();
-		emit("    # assignment: " + assignment.getIdentifier().getVarName());
 		Register var = assignment.getIdentifier().reg;
 		Register res;
 		if (expression != null) {
@@ -93,10 +97,9 @@ public class CodeVisitor extends BaseVisitor {
 		} else {
 			emit("    # readInt => r_" + assignment.getIdentifier().getVarName());
 			assignment.getReadInt().accept(this);
-			res = $v0;
-			emit(new Instruction("move", $t0, res));
+			// readInt will store input into $v0
+			emit(new Instruction("move", $t0, $v0));
 		}
-
 		emit(new Instruction("sw", $t0, var));
 		emit("");
 	}
@@ -121,7 +124,16 @@ public class CodeVisitor extends BaseVisitor {
 	@Override
 	public void visit(WriteInt writeInt) throws ParserException {
 		writeInt.getExpression().accept(this);
-		throw new ParserException("Not Implemented");
+		Register r1 = writeInt.getExpression().reg;
+		emit("    # writeInt");
+		emit(new Instruction("li", $v0, 1));
+		emit(new Instruction("lw", $t1, r1));
+		emit(new Instruction("move", $a0, $t1));
+		emit(new Instruction("syscall"));
+		emit(new Instruction("li", $v0, 4));
+		emit(new Instruction("la", $a0, new Register("newline")));
+		emit(new Instruction("syscall"));
+		emit("");
 	}
 
 	@Override
@@ -160,24 +172,69 @@ public class CodeVisitor extends BaseVisitor {
 	public void visit(Term term) throws ParserException {
 		term.getFactor().accept(this);
 		Term right = term.getTerm();
+
 		if (right != null) {
+			// multiply
 			right.accept(this);
+			Register res = Register.next();
+			term.reg = res;
+			Register r1 = term.getFactor().reg;
+			Register r2 = right.reg;
+			emit("    # multiply");
+			emit(new Instruction("lw", $t1, r1));
+			emit(new Instruction("lw", $t2, r2));
+			emit(new Instruction("mul", $t0, $t1, $t2));
+			emit(new Instruction("sw", $t0, res));
+			emit("");
+		} else {
+			term.reg = term.getFactor().reg;
 		}
-		throw new ParserException("Not Implemented");
 	}
 
 	@Override
 	public void visit(Factor factor) throws ParserException {
+		// ident
 		Identifier identifier = factor.getIdent();
 		if (identifier != null) {
 			identifier.accept(this);
+			factor.reg = identifier.reg;
 			return;
 		}
+
+		// num
+		Token num = factor.getNum();
+		if (num != null) {
+			Register r1 = Register.next();
+			factor.reg = r1;
+			int val = Integer.valueOf(num.getText());
+			emit(String.format("    # loadI %d => r%d", val, tempReg++));
+			emit(new Instruction("li", $t0, val));
+			emit(new Instruction("sw", $t0, r1));
+			emit("");
+			return;
+		}
+
+		// bool
+		Token bool = factor.getBoollit();
+		if (bool != null) {
+			Register r1 = Register.next();
+			factor.reg = r1;
+			int val = 0;
+			if (Boolean.valueOf(bool.getText()))
+				val = 1;
+			emit(String.format("    # loadI %d => r%d", val, tempReg++));
+			emit(new Instruction("li", $t0, val));
+			emit(new Instruction("sw", $t0, r1));
+			emit("");
+			return;
+		}
+
+		// LP <expression> RP
 		Expression expression = factor.getExpression();
 		if (expression != null) {
 			expression.accept(this);
+			factor.reg = expression.reg;
 		}
-		throw new ParserException("Not Implemented");
 	}
 
 }
