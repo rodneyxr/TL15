@@ -2,5 +2,5 @@ program
 	var X as int ;
 begin
 	X := readint ;
-	writeint X mod 5 ;
+	writeint X - 5 ;
 end

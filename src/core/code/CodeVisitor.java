@@ -163,10 +163,34 @@ public class CodeVisitor extends BaseVisitor {
 	public void visit(SimpleExpression simpleExpression) throws ParserException {
 		simpleExpression.getTerm().accept(this);
 		SimpleExpression right = simpleExpression.getSimpleExpression();
+
 		if (right != null) {
 			right.accept(this);
+
+			Register res = Register.next();
+			simpleExpression.reg = res;
+			Register r1 = simpleExpression.getTerm().reg;
+			Register r2 = right.reg;
+			switch (simpleExpression.getAdditive().getText()) {
+			case Lexer.ADD:
+				emit("    # add");
+				emit(new Instruction("lw", $t1, r1));
+				emit(new Instruction("lw", $t2, r2));
+				emit(new Instruction("add", $t0, $t1, $t2));
+				emit(new Instruction("sw", $t0, res));
+				break;
+			case Lexer.SUB:
+				emit("    # subtract");
+				emit(new Instruction("lw", $t1, r1));
+				emit(new Instruction("lw", $t2, r2));
+				emit(new Instruction("sub", $t0, $t1, $t2));
+				emit(new Instruction("sw", $t0, res));
+				break;
+			}
+			emit("");
+		} else {
+			simpleExpression.reg = simpleExpression.getTerm().reg;
 		}
-		throw new ParserException("Not Implemented");
 	}
 
 	@Override
