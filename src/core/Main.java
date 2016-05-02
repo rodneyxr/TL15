@@ -9,6 +9,7 @@ import core.code.CodeVisitor;
 import core.lexer.Lexer;
 import core.lexer.TokenStream;
 import core.parser.Parser;
+import core.parser.ParserException;
 import core.parser.SymbolVisitor;
 import core.parser.TypeVisitor;
 import core.tools.Utils;
@@ -43,34 +44,49 @@ public class Main {
 		Lexer lexer = new Lexer(scanner);
 		TokenStream stream = new TokenStream(lexer);
 		Parser parser = new Parser(stream);
-
 		Program ast = parser.parse();
 
-		SymbolVisitor typeChecker = new SymbolVisitor();
-		typeChecker.visit(ast);
-		TypeVisitor typeVisitor = new TypeVisitor(typeChecker.getSymbolTable());
+		SymbolVisitor symbolVisitor = null;
+		TypeVisitor typeVisitor = null;
+		CodeVisitor codeVisitor;
+
+		// create the symbol table
 		try {
+			symbolVisitor = new SymbolVisitor();
+			symbolVisitor.visit(ast);
+		} catch (ParserException e) {
+			System.err.println(e.getMessage());
+			System.exit(1);
+		}
+
+		// handle type checking
+		try {
+			typeVisitor = new TypeVisitor(symbolVisitor.getSymbolTable());
 			typeVisitor.visit(ast);
-		} catch (NullPointerException npe) {
+		} catch (Exception e) {
 		}
 
 		String dot = Utils.generateDOT(parser.getAST());
 		String astFilePath = sourceFile.getAbsolutePath().replaceFirst("\\.tl$", ".ast.dot");
 		Utils.saveDOTToFile(dot, astFilePath);
 		System.out.println("AST DOT file written to: " + astFilePath);
-
+		
 		if (typeVisitor.hasTypeError()) {
 			System.out.println("Program had errors.");
+			return;
 		} else {
 			System.out.println("Compiled Successfully!");
 		}
 
 		// FIXME: Handle notification of error or success
 		System.out.println();
-		CodeVisitor codeVisitor = new CodeVisitor(typeChecker.getSymbolTable());
-		codeVisitor.visit(ast);
-		
-		System.out.println(codeVisitor.getCode());
+		try {
+			codeVisitor = new CodeVisitor(symbolVisitor.getSymbolTable());
+			codeVisitor.visit(ast);
+			System.out.println(codeVisitor.getCode());
+		} catch (ParserException e) {
+			System.err.println(e.getMessage());
+		}
 
 	}
 

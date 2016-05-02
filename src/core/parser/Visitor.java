@@ -18,20 +18,20 @@ import core.ast.WhileStatement;
 import core.ast.WriteInt;
 
 public interface Visitor {
-	public void visit(ASTNode astNode);
-	public void visit(Program program);
-	public void visit(StatementSequence statementSequence);
-	public void visit(Declarations declarations);
-	public void visit(Declaration declaration);
-	public void visit(Identifier ident);
-	public void visit(Assignment assignment);
-	public void visit(IfStatement ifStatement);
-	public void visit(WhileStatement whileStatement);
-	public void visit(WriteInt writeInt);
-	public void visit(ReadInt readInt);
-	public void visit(ElseClause elseClause);
-	public void visit(Expression expression);
-	public void visit(SimpleExpression simpleExpression);
-	public void visit(Term term);
-	public void visit(Factor factor);
+	public void visit(ASTNode astNode) throws ParserException;
+	public void visit(Program program) throws ParserException;
+	public void visit(StatementSequence statementSequence) throws ParserException;
+	public void visit(Declarations declarations) throws ParserException;
+	public void visit(Declaration declaration) throws ParserException;
+	public void visit(Identifier ident) throws ParserException;
+	public void visit(Assignment assignment) throws ParserException;
+	public void visit(IfStatement ifStatement) throws ParserException;
+	public void visit(WhileStatement whileStatement) throws ParserException;
+	public void visit(WriteInt writeInt) throws ParserException;
+	public void visit(ReadInt readInt) throws ParserException;
+	public void visit(ElseClause elseClause) throws ParserException;
+	public void visit(Expression expression) throws ParserException;
+	public void visit(SimpleExpression simpleExpression) throws ParserException;
+	public void visit(Term term) throws ParserException;
+	public void visit(Factor factor) throws ParserException;
 }

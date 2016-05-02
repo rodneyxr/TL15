@@ -40,7 +40,7 @@ public class TypeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(Program program) {
+	public void visit(Program program) throws ParserException {
 		program.getDeclarations().accept(this);
 		program.getStatementSequence().accept(this);
 		if (program.getDeclarations().type.equals(IdentifierType.VOID)
@@ -54,21 +54,21 @@ public class TypeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(StatementSequence statementSequence) {
+	public void visit(StatementSequence statementSequence) throws ParserException {
 		for (Statement statement : statementSequence.statements)
 			statement.accept(this);
 		statementSequence.type = IdentifierType.VOID;
 	}
 
 	@Override
-	public void visit(Declarations declarations) {
+	public void visit(Declarations declarations) throws ParserException {
 		for (Declaration declaration : declarations.declarations)
 			declaration.accept(this);
 		declarations.type = IdentifierType.VOID;
 	}
 
 	@Override
-	public void visit(Declaration declaration) {
+	public void visit(Declaration declaration) throws ParserException {
 		declaration.getIdent().accept(this);
 		IdentifierType type = declaration.getIdent().type;
 		if (type.equals(IdentifierType.INT) || type.equals(IdentifierType.BOOL)) {
@@ -93,7 +93,7 @@ public class TypeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(Assignment assignment) {
+	public void visit(Assignment assignment) throws ParserException {
 		IdentifierType leftType;
 		IdentifierType rightType;
 
@@ -125,7 +125,7 @@ public class TypeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(IfStatement ifStatement) {
+	public void visit(IfStatement ifStatement) throws ParserException {
 		ifStatement.getExpression().accept(this);
 		ifStatement.getStatements().accept(this);
 
@@ -157,7 +157,7 @@ public class TypeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(WhileStatement whileStatement) {
+	public void visit(WhileStatement whileStatement) throws ParserException {
 		whileStatement.getExpression().accept(this);
 		whileStatement.getStatements().accept(this);
 
@@ -177,7 +177,7 @@ public class TypeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(WriteInt writeInt) {
+	public void visit(WriteInt writeInt) throws ParserException {
 		writeInt.getExpression().accept(this);
 		IdentifierType exprType = writeInt.getExpression().type;
 		if (exprType.equals(IdentifierType.INT)) {
@@ -195,7 +195,7 @@ public class TypeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(ElseClause elseClause) {
+	public void visit(ElseClause elseClause) throws ParserException {
 		elseClause.getStatements().accept(this);
 		if (elseClause.getStatements().type.equals(IdentifierType.VOID)) {
 			elseClause.type = IdentifierType.VOID;
@@ -207,7 +207,7 @@ public class TypeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(Expression expression) {
+	public void visit(Expression expression) throws ParserException {
 		IdentifierType leftType;
 		IdentifierType rightType;
 
@@ -237,7 +237,7 @@ public class TypeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(SimpleExpression simpleExpression) {
+	public void visit(SimpleExpression simpleExpression) throws ParserException {
 		IdentifierType leftType;
 		IdentifierType rightType;
 
@@ -260,7 +260,7 @@ public class TypeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(Term term) {
+	public void visit(Term term) throws ParserException {
 		IdentifierType leftType;
 		IdentifierType rightType;
 
@@ -284,7 +284,7 @@ public class TypeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(Factor factor) {
+	public void visit(Factor factor) throws ParserException {
 		// ident
 		Identifier identifier = factor.getIdent();
 		if (identifier != null) {

@@ -52,7 +52,7 @@ public class Utils {
 			dot.append(",shape=box");
 			if (node.typeError)
 				dot.append(",fillcolor=\"/pastel13/1\"");
-			
+
 			dot.append("];\n");
 		}
 

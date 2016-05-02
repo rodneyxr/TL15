@@ -26,35 +26,35 @@ public class BaseVisitor implements Visitor {
 	}
 
 	@Override
-	public void visit(Program program) {
+	public void visit(Program program) throws ParserException {
 		program.getDeclarations().accept(this);
 		program.getStatementSequence().accept(this);
 	}
 	
 	@Override
-	public void visit(StatementSequence statementSequence) {
+	public void visit(StatementSequence statementSequence) throws ParserException {
 		for (Statement statement : statementSequence.statements)
 			statement.accept(this);
 	}
 
 	@Override
-	public void visit(Declarations declarations) {
+	public void visit(Declarations declarations) throws ParserException {
 		for (Declaration declaration : declarations.declarations)
 			declaration.accept(this);
 	}
 
 	@Override
-	public void visit(Declaration declaration) {
+	public void visit(Declaration declaration) throws ParserException {
 		declaration.getIdent().accept(this);
 	}
 
 	@Override
-	public void visit(Identifier ident) {
+	public void visit(Identifier ident) throws ParserException {
 		return;
 	}
 
 	@Override
-	public void visit(Assignment assignment) {
+	public void visit(Assignment assignment) throws ParserException {
 		assignment.getIdentifier().accept(this);
 		Expression expression = assignment.getExpression();
 		if (expression != null)
@@ -64,7 +64,7 @@ public class BaseVisitor implements Visitor {
 	}
 
 	@Override
-	public void visit(IfStatement ifStatement) {
+	public void visit(IfStatement ifStatement) throws ParserException {
 		ifStatement.getExpression().accept(this);
 		ifStatement.getStatements().accept(this);
 		ElseClause elseClause = ifStatement.getElseClause();
@@ -73,28 +73,28 @@ public class BaseVisitor implements Visitor {
 	}
 
 	@Override
-	public void visit(WhileStatement whileStatement) {
+	public void visit(WhileStatement whileStatement) throws ParserException {
 		whileStatement.getExpression().accept(this);
 		whileStatement.getStatements().accept(this);
 	}
 
 	@Override
-	public void visit(WriteInt writeInt) {
+	public void visit(WriteInt writeInt) throws ParserException {
 		writeInt.getExpression().accept(this);
 	}
 
 	@Override
-	public void visit(ReadInt readInt) {
+	public void visit(ReadInt readInt) throws ParserException {
 		return;
 	}
 
 	@Override
-	public void visit(ElseClause elseClause) {
+	public void visit(ElseClause elseClause) throws ParserException {
 		elseClause.getStatements().accept(this);
 	}
 
 	@Override
-	public void visit(Expression expression) {
+	public void visit(Expression expression) throws ParserException {
 		expression.getLeft().accept(this);
 		Expression right = expression.getRight();
 		if (right != null) {
@@ -103,7 +103,7 @@ public class BaseVisitor implements Visitor {
 	}
 
 	@Override
-	public void visit(SimpleExpression simpleExpression) {
+	public void visit(SimpleExpression simpleExpression) throws ParserException {
 		simpleExpression.getTerm().accept(this);
 		SimpleExpression right = simpleExpression.getSimpleExpression();
 		if (right != null) {
@@ -112,7 +112,7 @@ public class BaseVisitor implements Visitor {
 	}
 
 	@Override
-	public void visit(Term term) {
+	public void visit(Term term) throws ParserException {
 		term.getFactor().accept(this);
 		Term right = term.getTerm();
 		if (right != null) {
@@ -121,7 +121,7 @@ public class BaseVisitor implements Visitor {
 	}
 
 	@Override
-	public void visit(Factor factor) {
+	public void visit(Factor factor) throws ParserException {
 		Identifier identifier = factor.getIdent();
 		if (identifier != null) {
 			identifier.accept(this);

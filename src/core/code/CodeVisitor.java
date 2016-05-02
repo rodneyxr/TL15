@@ -16,6 +16,7 @@ import core.ast.Term;
 import core.ast.WhileStatement;
 import core.ast.WriteInt;
 import core.parser.BaseVisitor;
+import core.parser.ParserException;
 import core.parser.Symbol;
 
 public class CodeVisitor extends BaseVisitor {
@@ -39,13 +40,8 @@ public class CodeVisitor extends BaseVisitor {
 		emit("    " + instruction);
 	}
 
-	private void perror(String message) {
-		System.err.println(message);
-		System.exit(1);
-	}
-
 	@Override
-	public void visit(Program program) {
+	public void visit(Program program) throws ParserException {
 		emit("    .data");
 		emit("newline:	.asciiz \"\\n\"");
 		emit("    .text");
@@ -62,7 +58,7 @@ public class CodeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(Declaration declaration) {
+	public void visit(Declaration declaration) throws ParserException {
 		declaration.getIdent().accept(this);
 		Register r1 = new Register("$t0");
 		Register r2 = declaration.getIdent().reg;
@@ -73,17 +69,17 @@ public class CodeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(Identifier ident) {
+	public void visit(Identifier ident) throws ParserException {
 		Register r1 = table.get(ident.getVarName()).reg;
 		if (r1 != null) {
 			ident.reg = r1;
 		} else {
-			perror("Identifier: " + ident.getVarName() + " not initialized");
+			throw new ParserException("Identifier: " + ident.getVarName() + " not initialized");
 		}
 	}
 
 	@Override
-	public void visit(Assignment assignment) {
+	public void visit(Assignment assignment) throws ParserException {
 		// TODO: start here
 		assignment.getIdentifier().accept(this);
 		Expression expression = assignment.getExpression();
@@ -94,7 +90,7 @@ public class CodeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(IfStatement ifStatement) {
+	public void visit(IfStatement ifStatement) throws ParserException {
 		ifStatement.getExpression().accept(this);
 		ifStatement.getStatements().accept(this);
 		ElseClause elseClause = ifStatement.getElseClause();
@@ -103,28 +99,28 @@ public class CodeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(WhileStatement whileStatement) {
+	public void visit(WhileStatement whileStatement) throws ParserException {
 		whileStatement.getExpression().accept(this);
 		whileStatement.getStatements().accept(this);
 	}
 
 	@Override
-	public void visit(WriteInt writeInt) {
+	public void visit(WriteInt writeInt) throws ParserException {
 		writeInt.getExpression().accept(this);
 	}
 
 	@Override
-	public void visit(ReadInt readInt) {
+	public void visit(ReadInt readInt) throws ParserException {
 		return;
 	}
 
 	@Override
-	public void visit(ElseClause elseClause) {
+	public void visit(ElseClause elseClause) throws ParserException {
 		elseClause.getStatements().accept(this);
 	}
 
 	@Override
-	public void visit(Expression expression) {
+	public void visit(Expression expression) throws ParserException {
 		expression.getLeft().accept(this);
 		Expression right = expression.getRight();
 		if (right != null) {
@@ -133,7 +129,7 @@ public class CodeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(SimpleExpression simpleExpression) {
+	public void visit(SimpleExpression simpleExpression) throws ParserException {
 		simpleExpression.getTerm().accept(this);
 		SimpleExpression right = simpleExpression.getSimpleExpression();
 		if (right != null) {
@@ -142,7 +138,7 @@ public class CodeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(Term term) {
+	public void visit(Term term) throws ParserException {
 		term.getFactor().accept(this);
 		Term right = term.getTerm();
 		if (right != null) {
@@ -151,7 +147,7 @@ public class CodeVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visit(Factor factor) {
+	public void visit(Factor factor) throws ParserException {
 		Identifier identifier = factor.getIdent();
 		if (identifier != null) {
 			identifier.accept(this);

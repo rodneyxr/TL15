@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import core.parser.ParserException;
 import core.parser.Visitor;
 
 public abstract class ASTNode {
@@ -131,7 +132,7 @@ public abstract class ASTNode {
 		}
 	}
 
-	public void accept(Visitor visitor) {
+	public void accept(Visitor visitor) throws ParserException {
 		if (this instanceof Assignment)
 			visitor.visit((Assignment) this);
 		else if (this instanceof IfStatement)
