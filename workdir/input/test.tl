@@ -3,7 +3,7 @@ program
 	var FLAG as bool ;
 begin
 
-	FLAG := false ;
+	FLAG := true ;
 	X := readint ;
 
 	if FLAG then

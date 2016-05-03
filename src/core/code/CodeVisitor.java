@@ -132,7 +132,9 @@ public class CodeVisitor extends BaseVisitor {
 
 		if (elseClause != null) {
 			emit(new Instruction("j", endIfLabel));
+			emit("");
 			emit(elseLabel);
+			emit("");
 			elseClause.accept(this);
 			emit(endIfLabel);
 		} else {
@@ -173,8 +175,6 @@ public class CodeVisitor extends BaseVisitor {
 	@Override
 	public void visit(ElseClause elseClause) throws ParserException {
 		elseClause.getStatements().accept(this);
-		// TODO: implement this
-		throw new ParserException("Not Implemented");
 	}
 
 	@Override
