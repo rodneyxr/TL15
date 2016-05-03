@@ -1,12 +1,16 @@
 program 
-	var X as int ;
-begin
+  var N as int ; 
+  var SQRT as int ; 
+begin 
+  N := readint ; 
+  SQRT := 0 ; 
 
-	X := readint ;
+  while SQRT * SQRT <= N do 
+    SQRT := SQRT + 1 ; 
+  end ; 
 
-	while X do 
-		writeint X ;
-		X := X - 1 ;
-	end ;
+  SQRT := SQRT - 1 ;
+
+  writeint SQRT ; 
 
 end 

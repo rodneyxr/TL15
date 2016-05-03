@@ -145,13 +145,14 @@ public class CodeVisitor extends BaseVisitor {
 
 	@Override
 	public void visit(WhileStatement whileStatement) throws ParserException {
-		whileStatement.getExpression().accept(this);
 		Label[] labels = Label.nextWhileLabels();
 		Label whileStart = labels[0];
 		Label whileEnd = labels[1];
-		Register res = whileStatement.getExpression().reg;
 		emit(whileStart);
 		emit("");
+
+		whileStatement.getExpression().accept(this);
+		Register res = whileStatement.getExpression().reg;
 		emit("    # WhileStatement");
 		emit(new Instruction("lw", $t0, res));
 		emit(new Instruction("beqz", $t0, whileEnd));
@@ -194,11 +195,61 @@ public class CodeVisitor extends BaseVisitor {
 	public void visit(Expression expression) throws ParserException {
 		expression.getLeft().accept(this);
 		Expression right = expression.getRight();
+
 		if (right != null) {
 			right.accept(this);
+			Register res = Register.next();
+			expression.reg = res;
+			Register r1 = expression.getLeft().reg;
+			Register r2 = right.reg;
+			switch (expression.getCompare().getText()) {
+			case Lexer.EQ:
+				emit("    # EQ");
+				emit(new Instruction("lw", $t1, r1));
+				emit(new Instruction("lw", $t2, r2));
+				emit(new Instruction("seq", $t0, $t1, $t2));
+				emit(new Instruction("sw", $t0, res));
+				break;
+			case Lexer.NE:
+				emit("    # NE");
+				emit(new Instruction("lw", $t1, r1));
+				emit(new Instruction("lw", $t2, r2));
+				emit(new Instruction("sne", $t0, $t1, $t2));
+				emit(new Instruction("sw", $t0, res));
+				break;
+			case Lexer.LT:
+				emit("    # LT");
+				emit(new Instruction("lw", $t1, r1));
+				emit(new Instruction("lw", $t2, r2));
+				emit(new Instruction("slt", $t0, $t1, $t2));
+				emit(new Instruction("sw", $t0, res));
+				break;
+			case Lexer.GT:
+				emit("    # GT");
+				emit(new Instruction("lw", $t1, r1));
+				emit(new Instruction("lw", $t2, r2));
+				emit(new Instruction("sgt", $t0, $t1, $t2));
+				emit(new Instruction("sw", $t0, res));
+				break;
+			case Lexer.LE:
+				emit("    # LE");
+				emit(new Instruction("lw", $t1, r1));
+				emit(new Instruction("lw", $t2, r2));
+				emit(new Instruction("sle", $t0, $t1, $t2));
+				emit(new Instruction("sw", $t0, res));
+				break;
+			case Lexer.GE:
+				emit("    # GE");
+				emit(new Instruction("lw", $t1, r1));
+				emit(new Instruction("lw", $t2, r2));
+				emit(new Instruction("sge", $t0, $t1, $t2));
+				emit(new Instruction("sw", $t0, res));
+				break;
+			}
+			emit("");
+		} else {
+			expression.reg = expression.getLeft().reg;
 		}
-		// TODO: implement this
-		throw new ParserException("Not Implemented");
 	}
 
 	@Override
