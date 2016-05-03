@@ -26,6 +26,7 @@ public class CodeVisitor extends BaseVisitor {
 	HashMap<String, Symbol> table;
 	String code = "";
 	int tempReg = 0;
+	int ifCount = 0;
 
 	private static final Register $a0 = new Register("$a0");
 	private static final Register $t0 = new Register("$t0");
@@ -47,6 +48,10 @@ public class CodeVisitor extends BaseVisitor {
 
 	private void emit(Instruction instruction) {
 		emit("    " + instruction);
+	}
+
+	private void emit(Label label) {
+		emit(label + ":");
 	}
 
 	@Override
@@ -94,7 +99,8 @@ public class CodeVisitor extends BaseVisitor {
 		if (expression != null) {
 			expression.accept(this);
 			res = expression.reg;
-			emit(new Instruction("li", $t0, res));
+			emit("    # assignment => r_" + assignment.getIdentifier().getVarName());
+			emit(new Instruction("lw", $t0, res));
 		} else {
 			emit("    # readInt => r_" + assignment.getIdentifier().getVarName());
 			assignment.getReadInt().accept(this);
@@ -107,18 +113,39 @@ public class CodeVisitor extends BaseVisitor {
 
 	@Override
 	public void visit(IfStatement ifStatement) throws ParserException {
-		ifStatement.getExpression().accept(this);
-		ifStatement.getStatements().accept(this);
 		ElseClause elseClause = ifStatement.getElseClause();
-		if (elseClause != null)
+		ifStatement.getExpression().accept(this);
+		Label[] ifLabels = Label.nextIfLabels();
+		Label elseLabel = ifLabels[0];
+		Label endIfLabel = ifLabels[1];
+		Register res = ifStatement.getExpression().reg;
+		emit("    # IfStatement");
+		emit(new Instruction("lw", $t0, res));
+		if (elseClause != null) {
+			emit(new Instruction("beqz", $t0, elseLabel));
+		} else {
+			emit(new Instruction("beqz", $t0, endIfLabel));
+		}
+		emit("");
+
+		ifStatement.getStatements().accept(this);
+
+		if (elseClause != null) {
+			emit(new Instruction("j", endIfLabel));
+			emit(elseLabel);
 			elseClause.accept(this);
-		throw new ParserException("Not Implemented");
+			emit(endIfLabel);
+		} else {
+			emit(endIfLabel);
+		}
+		emit("");
 	}
 
 	@Override
 	public void visit(WhileStatement whileStatement) throws ParserException {
 		whileStatement.getExpression().accept(this);
 		whileStatement.getStatements().accept(this);
+		// TODO: implement this
 		throw new ParserException("Not Implemented");
 	}
 
@@ -146,6 +173,7 @@ public class CodeVisitor extends BaseVisitor {
 	@Override
 	public void visit(ElseClause elseClause) throws ParserException {
 		elseClause.getStatements().accept(this);
+		// TODO: implement this
 		throw new ParserException("Not Implemented");
 	}
 
@@ -156,6 +184,7 @@ public class CodeVisitor extends BaseVisitor {
 		if (right != null) {
 			right.accept(this);
 		}
+		// TODO: implement this
 		throw new ParserException("Not Implemented");
 	}
 
@@ -166,7 +195,6 @@ public class CodeVisitor extends BaseVisitor {
 
 		if (right != null) {
 			right.accept(this);
-
 			Register res = Register.next();
 			simpleExpression.reg = res;
 			Register r1 = simpleExpression.getTerm().reg;

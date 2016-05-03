@@ -10,12 +10,25 @@ public class Instruction {
 
 	private Integer value;
 
+	private Label label;
+
 	public Instruction(String op) {
 		if (!op.equals("syscall")) {
 			System.err.println("Instruction.java: Invalid MIPS instruction");
 			System.exit(1);
 		}
 		this.op = op;
+	}
+
+	public Instruction(String op, Label label) {
+		this.op = op;
+		this.label = label;
+	}
+
+	public Instruction(String op, Register r1, Label label) {
+		this.op = op;
+		this.r1 = r1;
+		this.label = label;
 	}
 
 	public Instruction(String op, Register r1, int value) {
@@ -43,6 +56,12 @@ public class Instruction {
 			return op;
 		if (value != null)
 			return String.format("%s %s, %d", op, r1, value);
+		if (label != null) {
+			if (r1 != null)
+				return String.format("%s %s, %s", op, r1, label);
+			else
+				return String.format("%s %s", op, label);
+		}
 		if (r3 == null)
 			return String.format("%s %s, %s", op, r1, r2);
 		return String.format("%s %s, %s, %s", op, r1, r2, r3);
