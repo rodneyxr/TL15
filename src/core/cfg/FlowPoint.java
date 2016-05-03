@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import core.code.Instruction;
+import core.code.Label;
 
 public class FlowPoint {
 
@@ -14,11 +15,16 @@ public class FlowPoint {
 
 	private List<FlowPoint> children;
 	private List<Instruction> instructions;
+	private Label branch;
 
 	public FlowPoint() {
 		id = ID_GENERATOR.getAndIncrement();
 		children = new ArrayList<>();
 		instructions = new ArrayList<>();
+	}
+
+	public static int getMaxID() {
+		return ID_GENERATOR.get() - 1;
 	}
 
 	public int getID() {
@@ -27,6 +33,14 @@ public class FlowPoint {
 
 	public boolean isEmpty() {
 		return instructions.isEmpty();
+	}
+
+	public void setBranchLabel(Label label) {
+		this.branch = label;
+	}
+
+	public Label getBranchLabel() {
+		return branch;
 	}
 
 	public List<FlowPoint> getChildren() {
@@ -91,10 +105,9 @@ public class FlowPoint {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-//		sb.append(instructions.get(0));
 		for (Instruction i : instructions) {
 			sb.append(i);
-			sb.append('\n');
+			sb.append("\\l");
 		}
 		return sb.toString();
 	}

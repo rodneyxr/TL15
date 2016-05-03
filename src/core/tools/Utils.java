@@ -87,12 +87,12 @@ public class Utils {
 		dot.append("}");
 		return dot.toString();
 	}
-	
+
 	public static String generateCFGDOT(FlowPoint cfg) {
 		ArrayList<FlowPoint> flowpoints = cfg.getAllFlowPoints();
-		System.out.println("Utils.java: " + flowpoints.size());
 
 		StringBuilder dot = new StringBuilder("digraph G {\n");
+		dot.append("    edge[tailport=s];\n");
 		dot.append("    node[shape=box,style=filled,fillcolor=\"white\"];\n");
 
 		// first define all nodes
@@ -109,6 +109,9 @@ public class Utils {
 		}
 
 		dot.append("\n");
+
+		dot.append("    entry -> 0;\n");
+		dot.append(String.format("    %d -> exit;\n", FlowPoint.getMaxID()));
 
 		// wire all parents to their children
 		for (FlowPoint fp : flowpoints) {

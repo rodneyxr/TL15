@@ -44,6 +44,7 @@ public class CodeVisitor extends BaseVisitor {
 
 	public FlowPoint generateCFG() {
 		HashMap<Label, FlowPoint> map = new HashMap<>();
+		List<FlowPoint> branches = new ArrayList<>();
 		FlowPoint cfg = null;
 		FlowPoint node = null;
 
@@ -73,15 +74,20 @@ public class CodeVisitor extends BaseVisitor {
 				node.addInstruction(i);
 				map.put(i.getLabel(), node);
 			} else if (i.isBranch()) {
-				// TODO: link branches to label flow points
 				node.addInstruction(i);
+				node.setBranchLabel(i.getLabel());
+				branches.add(node);
 				FlowPoint last = node;
 				node = new FlowPoint();
 				last.addFlowPoint(node);
 			} else {
 				node.addInstruction(i);
 			}
+		}
 
+		// link branches to label flow points
+		for (FlowPoint fp : branches) {
+			fp.addFlowPoint(map.get(fp.getBranchLabel()));
 		}
 		return cfg;
 	}

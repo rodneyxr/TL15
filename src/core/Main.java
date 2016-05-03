@@ -83,15 +83,16 @@ public class Main {
 			codeVisitor.visit(ast);
 			String mipsFilePath = Utils.writeCodeToFile(sourceFile, codeVisitor.getCode());
 			System.out.println("MIPS Assembly file written to: " + mipsFilePath);
-			
+
 			FlowPoint cfg = codeVisitor.generateCFG();
 			String cfgdot = Utils.generateCFGDOT(cfg);
 			String cfgFilePath = sourceFile.getAbsolutePath().replaceFirst("\\.tl$", ".3A.cfg.dot");
 			Utils.saveDOTToFile(cfgdot, cfgFilePath);
+			System.out.println("CFG DOT file written to: " + cfgFilePath);
 
 			System.out.println("Compiled Successfully!");
 		} catch (ParserException e) {
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 
 	}
