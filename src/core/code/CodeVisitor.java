@@ -146,9 +146,22 @@ public class CodeVisitor extends BaseVisitor {
 	@Override
 	public void visit(WhileStatement whileStatement) throws ParserException {
 		whileStatement.getExpression().accept(this);
+		Label[] labels = Label.nextWhileLabels();
+		Label whileStart = labels[0];
+		Label whileEnd = labels[1];
+		Register res = whileStatement.getExpression().reg;
+		emit(whileStart);
+		emit("");
+		emit("    # WhileStatement");
+		emit(new Instruction("lw", $t0, res));
+		emit(new Instruction("beqz", $t0, whileEnd));
+		emit("");
+
 		whileStatement.getStatements().accept(this);
-		// TODO: implement this
-		throw new ParserException("Not Implemented");
+		emit(new Instruction("j", whileStart));
+		emit("");
+		emit(whileEnd);
+		emit("");
 	}
 
 	@Override

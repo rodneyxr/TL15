@@ -1,15 +1,12 @@
 program 
 	var X as int ;
-	var FLAG as bool ;
 begin
 
-	FLAG := true ;
 	X := readint ;
 
-	if FLAG then
+	while X do 
 		writeint X ;
-	else
-		writeint X * 2 ;
+		X := X - 1 ;
 	end ;
 
 end 
