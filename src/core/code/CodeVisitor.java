@@ -129,8 +129,8 @@ public class CodeVisitor extends BaseVisitor {
 		program.getDeclarations().accept(this);
 		program.getStatementSequence().accept(this);
 		emit("# exit");
-		emit("    li $v0, 10");
-		emit("    syscall");
+		emit(new Instruction("li", $v0, 10));
+		emit(new Instruction("syscall"));
 	}
 
 	@Override
