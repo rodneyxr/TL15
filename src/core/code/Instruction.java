@@ -6,6 +6,8 @@ public class Instruction {
 	private boolean isComment; // true if comment
 	private boolean isLabel; // true if label
 	private boolean isRaw; // true if no instructions match
+	private boolean isBranch; // true if branch/jump instruction
+	private boolean isBlank; // true if blank line;
 
 	private Register r1;
 	private Register r2;
@@ -18,6 +20,8 @@ public class Instruction {
 	public Instruction(String op) {
 		if (op.matches("^\\s*#.*")) {
 			isComment = true;
+		} else if (op.matches("\\s*")) {
+			isBlank = true;
 		} else if (!op.equals("syscall")) {
 			isRaw = true;
 		}
@@ -32,12 +36,14 @@ public class Instruction {
 	public Instruction(String op, Label label) {
 		this.op = op;
 		this.label = label;
+		setBranch();
 	}
 
 	public Instruction(String op, Register r1, Label label) {
 		this.op = op;
 		this.r1 = r1;
 		this.label = label;
+		setBranch();
 	}
 
 	public Instruction(String op, Register r1, int value) {
@@ -67,12 +73,30 @@ public class Instruction {
 		return isLabel;
 	}
 
+	public boolean isBranch() {
+		return isBranch;
+	}
+	
+	public boolean isBlank() {
+		return isBlank;
+	}
+
+	public Label getLabel() {
+		return label;
+	}
+
+	private void setBranch() {
+		if (op.equals("beqz") || op.equals("j")) {
+			isBranch = true;
+		}
+	}
+
 	@Override
 	public String toString() {
 		if (isLabel)
 			return String.format("%s:", label);
 
-		if (op.equals("syscall") || isComment || isRaw)
+		if (op.equals("syscall") || isComment || isRaw || isBlank)
 			return op;
 
 		if (value != null)

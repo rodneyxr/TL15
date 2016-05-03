@@ -17,6 +17,7 @@ import core.ast.SimpleExpression;
 import core.ast.Term;
 import core.ast.WhileStatement;
 import core.ast.WriteInt;
+import core.cfg.FlowPoint;
 import core.lexer.Lexer;
 import core.lexer.Token;
 import core.parser.BaseVisitor;
@@ -28,8 +29,7 @@ public class CodeVisitor extends BaseVisitor {
 	HashMap<String, Symbol> table;
 	List<Instruction> instructions;
 
-	int tempReg = 0;
-	int ifCount = 0;
+	private int tempReg = 0;
 
 	private static final Register $a0 = new Register("$a0");
 	private static final Register $t0 = new Register("$t0");
@@ -40,6 +40,50 @@ public class CodeVisitor extends BaseVisitor {
 	public CodeVisitor(HashMap<String, Symbol> symbolTable) {
 		this.table = symbolTable;
 		this.instructions = new ArrayList<>();
+	}
+
+	public FlowPoint generateCFG() {
+		HashMap<Label, FlowPoint> map = new HashMap<>();
+		FlowPoint cfg = null;
+		FlowPoint node = null;
+
+		boolean startBlock = false; // skip the header
+		for (Instruction i : instructions) {
+			if (i.isBlank())
+				continue;
+
+			// ignore the header
+			if (!startBlock) {
+				if (i.isLabel() && i.getLabel().toString().equals("StartBlock")) {
+					startBlock = true;
+					cfg = new FlowPoint();
+					node = cfg;
+					node.addInstruction(i);
+					map.put(i.getLabel(), node);
+				}
+				continue;
+			}
+
+			if (i.isLabel()) {
+				FlowPoint last = node;
+				if (!node.isEmpty()) {
+					node = new FlowPoint();
+					last.addFlowPoint(node);
+				}
+				node.addInstruction(i);
+				map.put(i.getLabel(), node);
+			} else if (i.isBranch()) {
+				// TODO: link branches to label flow points
+				node.addInstruction(i);
+				FlowPoint last = node;
+				node = new FlowPoint();
+				last.addFlowPoint(node);
+			} else {
+				node.addInstruction(i);
+			}
+
+		}
+		return cfg;
 	}
 
 	public String getCode() {

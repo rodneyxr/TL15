@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import core.ast.ASTNode;
+import core.cfg.FlowPoint;
 import core.lexer.TokenStream;
 
 public class Utils {
@@ -77,6 +78,44 @@ public class Utils {
 				// fp -> child
 				dot.append("    ");
 				dot.append(node.getID());
+				dot.append(" -> ");
+				dot.append(child.getID());
+				dot.append(";\n");
+			}
+		}
+
+		dot.append("}");
+		return dot.toString();
+	}
+	
+	public static String generateCFGDOT(FlowPoint cfg) {
+		ArrayList<FlowPoint> flowpoints = cfg.getAllFlowPoints();
+		System.out.println("Utils.java: " + flowpoints.size());
+
+		StringBuilder dot = new StringBuilder("digraph G {\n");
+		dot.append("    node[shape=box,style=filled,fillcolor=\"white\"];\n");
+
+		// first define all nodes
+		for (FlowPoint fp : flowpoints) {
+			dot.append("    ");
+			dot.append(fp.getID());
+			dot.append("[label=\"");
+			dot.append(fp.toString().replaceAll("\"", "\\\""));
+			dot.append("\"");
+
+			dot.append(",shape=box");
+
+			dot.append("];\n");
+		}
+
+		dot.append("\n");
+
+		// wire all parents to their children
+		for (FlowPoint fp : flowpoints) {
+			for (FlowPoint child : fp.getChildren()) {
+				// fp -> child
+				dot.append("    ");
+				dot.append(fp.getID());
 				dot.append(" -> ");
 				dot.append(child.getID());
 				dot.append(";\n");
