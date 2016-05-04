@@ -1,0 +1,25 @@
+digraph G {
+    node[shape=box,style=filled,fillcolor="white"];
+    1[label="program",shape=box];
+    0[label="decl list",shape=box];
+    2[label="decl:'X':int",shape=box];
+    4[label="stmt list",shape=box];
+    5[label=":=",shape=box];
+    6[label="X:int",shape=box];
+    7[label="readint:int",shape=box];
+    8[label="writeint",shape=box];
+    11[label="*:int",shape=box];
+    12[label="2:int",shape=box];
+    14[label="X:int",shape=box];
+
+    1 -> 0;
+    1 -> 4;
+    0 -> 2;
+    4 -> 5;
+    4 -> 8;
+    5 -> 6;
+    5 -> 7;
+    8 -> 11;
+    11 -> 12;
+    11 -> 14;
+}

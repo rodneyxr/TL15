@@ -1,0 +1,8 @@
+digraph G {
+    edge[tailport=s];
+    node[shape=box,style=filled,fillcolor="white"];
+    0[label="StartBlock:\l# loadI 0 => r_X\lli $t0, 0\lsw $t0, 0($fp)\l# readInt => r_X\lli $v0, 5\lsyscall\lmove $t0, $v0\lsw $t0, 0($fp)\l# loadI 2 => r0\lli $t0, 2\lsw $t0, -4($fp)\l# multiply\llw $t1, -4($fp)\llw $t2, 0($fp)\lmul $t0, $t1, $t2\lsw $t0, -8($fp)\l# writeInt\lli $v0, 1\llw $t1, -8($fp)\lmove $a0, $t1\lsyscall\lli $v0, 4\lla $a0, newline\lsyscall\l# exit\lli $v0, 10\lsyscall\l",shape=box];
+
+    entry -> 0;
+    0 -> exit;
+}

@@ -1,0 +1,43 @@
+digraph G {
+    node[shape=box,style=filled,fillcolor="white"];
+    1[label="program",shape=box];
+    0[label="decl list",shape=box];
+    2[label="decl:'X':int",shape=box];
+    4[label="decl:'Y':bool",shape=box];
+    6[label="stmt list",shape=box];
+    7[label=":=",shape=box];
+    8[label="X:int",shape=box];
+    9[label="readint:int",shape=box];
+    10[label=":=",shape=box,fillcolor="/pastel13/1"];
+    11[label="Y:bool",shape=box];
+    12[label="readint:int",shape=box];
+    13[label=":=",shape=box,fillcolor="/pastel13/1"];
+    14[label="X:int",shape=box];
+    16[label="+:null",shape=box,fillcolor="/pastel13/1"];
+    18[label="X:int",shape=box];
+    22[label="Y:bool",shape=box];
+    24[label="writeint",shape=box];
+    27[label="*:int",shape=box];
+    28[label="2:int",shape=box];
+    30[label="X:int",shape=box];
+
+    1 -> 0;
+    1 -> 6;
+    0 -> 2;
+    0 -> 4;
+    6 -> 7;
+    6 -> 10;
+    6 -> 13;
+    6 -> 24;
+    7 -> 8;
+    7 -> 9;
+    10 -> 11;
+    10 -> 12;
+    13 -> 14;
+    13 -> 16;
+    16 -> 18;
+    16 -> 22;
+    24 -> 27;
+    27 -> 28;
+    27 -> 30;
+}

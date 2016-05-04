@@ -1,0 +1,46 @@
+===============================================================================
+* simple1.tl
+===============================================================================
+kto128:~/git/tiny/workdir$ ./exec.sh input/simple1.tl
+AST DOT file written to: /home/kto128/git/tiny/workdir/input/simple1.ast.dot
+MIPS Assembly file written to: /home/kto128/git/tiny/workdir/input/simple1.s
+CFG DOT file written to: /home/kto128/git/tiny/workdir/input/simple1.3A.cfg.dot
+Compiled Successfully!
+
+===============================================================================
+* simple2.tl
+===============================================================================
+kto128:~/git/tiny/workdir$ ./exec.sh input/simple2.tl
+TYPE ERROR: assignment -> Y:bool := readint:int
+TYPE ERROR: simpleExpression
+TYPE ERROR: assignment -> X:int := +:null
+AST DOT file written to: /home/kto128/git/tiny/workdir/input/simple2.ast.dot
+Program had errors.
+
+===============================================================================
+* sqrt1.tl
+===============================================================================
+kto128:~/git/tiny/workdir$ ./exec.sh input/sqrt1.tl
+AST DOT file written to: /home/kto128/git/tiny/workdir/input/sqrt1.ast.dot
+MIPS Assembly file written to: /home/kto128/git/tiny/workdir/input/sqrt1.s
+CFG DOT file written to: /home/kto128/git/tiny/workdir/input/sqrt1.3A.cfg.dot
+Compiled Successfully!
+
+===============================================================================
+* sqrt2.tl
+===============================================================================
+kto128:~/git/tiny/workdir$ ./exec.sh input/sqrt2.tl
+AST DOT file written to: /home/kto128/git/tiny/workdir/input/sqrt2.ast.dot
+MIPS Assembly file written to: /home/kto128/git/tiny/workdir/input/sqrt2.s
+CFG DOT file written to: /home/kto128/git/tiny/workdir/input/sqrt2.3A.cfg.dot
+Compiled Successfully!
+
+===============================================================================
+* fibonacci.tl
+===============================================================================
+kto128:~/git/tiny/workdir$ ./exec.sh input/fibonacci.tl
+AST DOT file written to: /home/kto128/git/tiny/workdir/input/fibonacci.ast.dot
+MIPS Assembly file written to: /home/kto128/git/tiny/workdir/input/fibonacci.s
+CFG DOT file written to: /home/kto128/git/tiny/workdir/input/fibonacci.3A.cfg.dot
+Compiled Successfully!
+

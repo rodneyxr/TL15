@@ -1,0 +1,29 @@
+digraph G {
+    edge[tailport=s];
+    node[shape=box,style=filled,fillcolor="white"];
+    0[label="StartBlock:\l# loadI 0 => r_PREV\lli $t0, 0\lsw $t0, 0($fp)\l# loadI 0 => r_RESULT\lli $t0, 0\lsw $t0, -4($fp)\l# loadI 0 => r_SUM\lli $t0, 0\lsw $t0, -8($fp)\l# loadI 0 => r_I\lli $t0, 0\lsw $t0, -12($fp)\l# loadI 0 => r_N\lli $t0, 0\lsw $t0, -16($fp)\l# loadI 0 => r0\lli $t0, 0\lsw $t0, -20($fp)\l# loadI 1 => r1\lli $t0, 1\lsw $t0, -24($fp)\l# subtract\llw $t1, -20($fp)\llw $t2, -24($fp)\lsub $t0, $t1, $t2\lsw $t0, -28($fp)\l# assignment => r_PREV\llw $t0, -28($fp)\lsw $t0, 0($fp)\l# loadI 1 => r2\lli $t0, 1\lsw $t0, -32($fp)\l# assignment => r_RESULT\llw $t0, -32($fp)\lsw $t0, -4($fp)\l# readInt => r_N\lli $v0, 5\lsyscall\lmove $t0, $v0\lsw $t0, -16($fp)\l# loadI 0 => r3\lli $t0, 0\lsw $t0, -36($fp)\l# GT\llw $t1, -16($fp)\llw $t2, -36($fp)\lsgt $t0, $t1, $t2\lsw $t0, -40($fp)\l# IfStatement\llw $t0, -40($fp)\lbeqz $t0, Else0\l",shape=box];
+    1[label="# loadI 0 => r4\lli $t0, 0\lsw $t0, -44($fp)\l# assignment => r_I\llw $t0, -44($fp)\lsw $t0, -12($fp)\l",shape=box];
+    2[label="WhileStart0:\l# LE\llw $t1, -12($fp)\llw $t2, -16($fp)\lsle $t0, $t1, $t2\lsw $t0, -48($fp)\l# WhileStatement\llw $t0, -48($fp)\lbeqz $t0, WhileEnd0\l",shape=box];
+    3[label="# add\llw $t1, -4($fp)\llw $t2, 0($fp)\ladd $t0, $t1, $t2\lsw $t0, -52($fp)\l# assignment => r_SUM\llw $t0, -52($fp)\lsw $t0, -8($fp)\l# assignment => r_PREV\llw $t0, -4($fp)\lsw $t0, 0($fp)\l# assignment => r_RESULT\llw $t0, -8($fp)\lsw $t0, -4($fp)\l# loadI 0 => r5\lli $t0, 0\lsw $t0, -56($fp)\l# NE\llw $t1, -4($fp)\llw $t2, -56($fp)\lsne $t0, $t1, $t2\lsw $t0, -60($fp)\l# IfStatement\llw $t0, -60($fp)\lbeqz $t0, EndIf1\l",shape=box];
+    4[label="# writeInt\lli $v0, 1\llw $t1, -4($fp)\lmove $a0, $t1\lsyscall\lli $v0, 4\lla $a0, newline\lsyscall\l",shape=box];
+    5[label="EndIf1:\l# loadI 1 => r6\lli $t0, 1\lsw $t0, -64($fp)\l# add\llw $t1, -12($fp)\llw $t2, -64($fp)\ladd $t0, $t1, $t2\lsw $t0, -68($fp)\l# assignment => r_I\llw $t0, -68($fp)\lsw $t0, -12($fp)\lj WhileStart0\l",shape=box];
+    6[label="WhileEnd0:\lj EndIf0\l",shape=box];
+    7[label="Else0:\l# loadI 0 => r7\lli $t0, 0\lsw $t0, -72($fp)\l# loadI 1 => r8\lli $t0, 1\lsw $t0, -76($fp)\l# subtract\llw $t1, -72($fp)\llw $t2, -76($fp)\lsub $t0, $t1, $t2\lsw $t0, -80($fp)\l# writeInt\lli $v0, 1\llw $t1, -80($fp)\lmove $a0, $t1\lsyscall\lli $v0, 4\lla $a0, newline\lsyscall\l",shape=box];
+    8[label="EndIf0:\l# exit\lli $v0, 10\lsyscall\l",shape=box];
+
+    entry -> 0;
+    8 -> exit;
+    0 -> 1;
+    0 -> 7;
+    1 -> 2;
+    2 -> 3;
+    2 -> 6;
+    3 -> 4;
+    3 -> 5;
+    4 -> 5;
+    5 -> 6;
+    5 -> 2;
+    6 -> 7;
+    6 -> 8;
+    7 -> 8;
+}

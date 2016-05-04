@@ -1,0 +1,16 @@
+digraph G {
+    edge[tailport=s];
+    node[shape=box,style=filled,fillcolor="white"];
+    0[label="StartBlock:\l# loadI 0 => r_N\lli $t0, 0\lsw $t0, 0($fp)\l# loadI 0 => r_SQRT\lli $t0, 0\lsw $t0, -4($fp)\l# loadI 0 => r_SQRT2\lli $t0, 0\lsw $t0, -8($fp)\l# readInt => r_N\lli $v0, 5\lsyscall\lmove $t0, $v0\lsw $t0, 0($fp)\l# loadI 0 => r0\lli $t0, 0\lsw $t0, -12($fp)\l# assignment => r_SQRT\llw $t0, -12($fp)\lsw $t0, -4($fp)\l# loadI 1 => r1\lli $t0, 1\lsw $t0, -16($fp)\l# assignment => r_SQRT2\llw $t0, -16($fp)\lsw $t0, -8($fp)\l",shape=box];
+    1[label="WhileStart0:\l# multiply\llw $t1, -4($fp)\llw $t2, -4($fp)\lmul $t0, $t1, $t2\lsw $t0, -20($fp)\l# LE\llw $t1, -20($fp)\llw $t2, 0($fp)\lsle $t0, $t1, $t2\lsw $t0, -24($fp)\l# WhileStatement\llw $t0, -24($fp)\lbeqz $t0, WhileEnd0\l",shape=box];
+    2[label="# loadI 1 => r2\lli $t0, 1\lsw $t0, -28($fp)\l# add\llw $t1, -4($fp)\llw $t2, -28($fp)\ladd $t0, $t1, $t2\lsw $t0, -32($fp)\l# assignment => r_SQRT\llw $t0, -32($fp)\lsw $t0, -4($fp)\l# assignment => r_SQRT2\llw $t0, -4($fp)\lsw $t0, -8($fp)\lj WhileStart0\l",shape=box];
+    3[label="WhileEnd0:\l# loadI 1 => r3\lli $t0, 1\lsw $t0, -36($fp)\l# subtract\llw $t1, -4($fp)\llw $t2, -36($fp)\lsub $t0, $t1, $t2\lsw $t0, -40($fp)\l# assignment => r_SQRT\llw $t0, -40($fp)\lsw $t0, -4($fp)\l# writeInt\lli $v0, 1\llw $t1, -4($fp)\lmove $a0, $t1\lsyscall\lli $v0, 4\lla $a0, newline\lsyscall\l# exit\lli $v0, 10\lsyscall\l",shape=box];
+
+    entry -> 0;
+    3 -> exit;
+    0 -> 1;
+    1 -> 2;
+    1 -> 3;
+    2 -> 3;
+    2 -> 1;
+}
